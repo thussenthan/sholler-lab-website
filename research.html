@@ -1,0 +1,1331 @@
+<style>
+  :root {
+    --research-blue: #1e407c;
+    --research-navy: #001e44;
+    --research-gradient: linear-gradient(
+      120deg,
+      #142c58 0%,
+      #23528f 45%,
+      #3a6fb6 60%,
+      #142c58 100%
+    );
+    --research-radius-lg: 18px;
+    --research-shadow-card: 0 10px 26px rgba(0, 30, 68, 0.08);
+    --research-shadow-card-hover: 0 16px 34px rgba(0, 30, 68, 0.18);
+    --research-shadow-float: 0 24px 70px rgba(0, 0, 0, 0.35);
+  }
+
+  .research-page {
+    padding-top: var(--sh-page-edge-space);
+    padding-bottom: var(--sh-page-edge-space);
+  }
+
+  @media (max-width: 768px) {
+    .research-page {
+      padding-top: var(--sh-page-edge-space-mobile);
+      padding-bottom: var(--sh-page-edge-space-mobile);
+    }
+  }
+
+  .research-page .sh-click-hint {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--research-blue);
+    margin: 16px 0 4px;
+  }
+
+  .research-page .sh-project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 22px;
+    margin-top: 18px;
+  }
+
+  .research-page .sh-project-card {
+    position: relative;
+    background: #fff;
+    border: 1px solid rgba(0, 30, 68, 0.12);
+    border-radius: var(--research-radius-lg);
+    box-shadow: var(--research-shadow-card);
+    overflow: hidden;
+    cursor: pointer;
+    transition:
+      transform 0.18s ease,
+      box-shadow 0.18s ease,
+      border-color 0.18s ease;
+    display: flex;
+    flex-direction: column;
+    outline: none;
+    border-left: 6px solid transparent;
+  }
+
+  .research-page .sh-project-card:focus-visible,
+  .research-page .sh-project-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--research-blue);
+    box-shadow: var(--research-shadow-card-hover);
+    border-left-color: #96bee6;
+  }
+
+  .research-page .sh-project-thumb {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    display: block;
+    border-radius: var(--research-radius-lg);
+  }
+
+  .research-page .sh-project-card.is-left-thumb .sh-project-thumb {
+    object-position: left center;
+  }
+
+  .research-page .sh-project-card.is-contain-thumb .sh-project-thumb {
+    object-fit: contain;
+    background: #fff;
+  }
+
+  .research-page .sh-project-card h3,
+  .research-page .sh-project-card p {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .research-page .sh-project-content {
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .research-page .sh-project-card h3 {
+    font-size: 1.15rem;
+    color: #052657;
+  }
+
+  .research-page .sh-project-short {
+    font-size: 0.95rem;
+    color: rgba(0, 30, 68, 0.78);
+    line-height: 1.5;
+  }
+
+  .research-page .sh-project-card::before {
+    content: "+";
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    font-size: 1.05rem;
+    color: var(--research-navy);
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    box-shadow: 0 5px 14px rgba(0, 30, 68, 0.14);
+    pointer-events: none;
+  }
+
+  .research-page .sh-project-card:hover::before,
+  .research-page .sh-project-card:focus-visible::before {
+    background: var(--research-blue);
+    color: #fff;
+  }
+
+  /* Biobank hero tile uses an inverted palette to stand out */
+  .research-page .sh-project-card.is-biobank {
+    background: var(--research-navy);
+    border-color: rgba(255, 255, 255, 0.18);
+    border-left-color: rgba(255, 255, 255, 0.6);
+    color: #f5f8ff;
+    box-shadow: 0 20px 44px rgba(0, 30, 68, 0.38);
+  }
+
+  .research-page .sh-project-card.is-biobank .sh-project-thumb {
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-radius: calc(var(--research-radius-lg) - 6px);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.35);
+  }
+
+  .research-page .sh-project-card.is-biobank .sh-project-content {
+    color: inherit;
+  }
+
+  .research-page .sh-project-card.is-biobank h3 {
+    color: #fff;
+  }
+
+  .research-page .sh-project-card.is-biobank .sh-project-short {
+    color: rgba(245, 250, 255, 0.9);
+  }
+
+  .research-page .sh-project-card.is-biobank::before {
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.45);
+  }
+
+  .research-page .sh-project-card.is-biobank:hover::before,
+  .research-page .sh-project-card.is-biobank:focus-visible::before {
+    background: #e8eef7;
+    color: var(--research-navy);
+  }
+
+  .research-page .sh-project-card.is-biobank:focus-visible,
+  .research-page .sh-project-card.is-biobank:hover {
+    border-color: rgba(255, 255, 255, 0.7);
+    border-left-color: #9bd5ff;
+    box-shadow: 0 24px 52px rgba(0, 30, 68, 0.5);
+  }
+
+  .sh-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    z-index: 9999;
+  }
+
+  .sh-modal-backdrop.is-open {
+    display: flex;
+  }
+
+  .sh-modal {
+    background: #fff;
+    width: min(1020px, 96vw);
+    max-height: 90vh;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--research-shadow-float);
+    animation: shModalIn 0.2s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  @keyframes shModalIn {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .sh-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 20px;
+    background: var(--research-gradient);
+    background-size: 220% 220%;
+    background-position: var(--gradient-pos, 0% 50%);
+    color: #f5f8ff;
+    border-radius: var(--research-radius-lg) var(--research-radius-lg) 0 0;
+    box-shadow: 0 6px 20px rgba(0, 30, 68, 0.35);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.25);
+    transition: background-position 0.15s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sh-modal-header::after {
+    content: "";
+    position: absolute;
+    inset: -60% 0;
+    background: radial-gradient(
+      circle at var(--glow-x, 50%) var(--glow-y, 50%),
+      rgba(75, 126, 196, 0.45),
+      rgba(20, 44, 88, 0) 60%
+    );
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+  }
+
+  .sh-modal-header.is-hovered::after {
+    opacity: 1;
+  }
+
+  .sh-modal-header h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    overflow-wrap: anywhere;
+    color: #f5f8ff;
+  }
+
+  .sh-modal-close {
+    background: transparent;
+    border: 0;
+    color: #f5f8ff;
+    font-size: 1.7rem;
+    cursor: pointer;
+    line-height: 1;
+  }
+
+  .sh-modal-body {
+    display: grid;
+    grid-template-columns: minmax(0, 40%) minmax(0, 60%);
+    gap: 22px;
+    padding: 20px;
+    overflow-y: auto;
+    font-size: 0.96rem;
+    line-height: 1.6;
+    align-items: stretch;
+    justify-items: start;
+  }
+
+  @media (max-width: 880px) {
+    .sh-modal-body {
+      grid-template-columns: 1fr;
+    }
+
+    .sh-modal-media {
+      max-width: 100%;
+      min-width: 0;
+      margin-inline: auto;
+    }
+  }
+
+  .sh-modal-body > div {
+    border-radius: var(--research-radius-lg);
+  }
+
+  .sh-modal-body p {
+    margin: 0 0 10px;
+    overflow-wrap: anywhere;
+  }
+
+  .sh-modal-meta {
+    font-weight: 700;
+    color: var(--research-blue);
+    margin-bottom: 10px;
+    font-size: 0.98rem;
+  }
+
+  .sh-modal-impact {
+    font-weight: 600;
+  }
+
+  .sh-modal-keywords {
+    font-size: 0.9rem;
+    font-style: italic;
+    color: rgba(0, 30, 68, 0.78);
+    margin-bottom: 0;
+  }
+
+  .sh-modal-keywords strong {
+    font-style: normal;
+    font-weight: 700;
+    color: var(--research-blue);
+  }
+
+  /* Modal image rounding + centering (no crop) */
+  .sh-modal-media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    align-self: stretch;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+
+  .sh-modal-media img {
+    border-radius: var(--research-radius-lg);
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: none;
+    aspect-ratio: auto;
+    object-fit: contain;
+  }
+</style>
+
+<section
+  class="sh-section sh-section-top-compact sh-projects-wrap research-page"
+>
+  <div class="sh-container">
+    <p class="sh-eyebrow">Current projects</p>
+    <h2 class="sh-heading-reset">Research Overview</h2>
+    <p>
+      We pursue translational strategies that protect childhood, from clever
+      maintenance regimens to customizable vaccines, 3D model systems, and
+      sequencing pipelines that keep clinicians informed in real time.
+    </p>
+
+    <div class="sh-project-grid">
+      <div
+        class="sh-project-card is-biobank"
+        data-modal="m10"
+        tabindex="0"
+        role="button"
+        aria-controls="m10"
+      >
+        <img
+          class="sh-project-thumb"
+          src="https://images.unsplash.com/photo-1486825586573-7131f7991bdd?auto=format&fit=crop&w=1200&q=80"
+          alt="Biobank freezer with organized vials"
+        />
+        <div class="sh-project-content">
+          <h3>Translational Pediatric Biobank</h3>
+          <p class="sh-project-short">
+            Safeguarding 70,000+ specimens, organoids, and models to fuel
+            collaborative pediatric oncology research worldwide.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="sh-project-card"
+        data-modal="m1"
+        tabindex="0"
+        role="button"
+        aria-controls="m1"
+      >
+        <img
+          class="sh-project-thumb"
+          src="https://sites.psu.edu/shollerlab/files/2025/12/Screenshot-2025-12-05-at-12.25.24-AM.png"
+          alt="Microscopy figure illustrating DFMO and senolytic sequencing"
+        />
+        <div class="sh-project-content">
+          <h3>Sequential Senescence-Targeted Maintenance</h3>
+          <p class="sh-project-short">
+            Converting polyamine-targeted maintenance therapy into a
+            senescence-to-apoptosis relay for high-risk neuroblastoma.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="sh-project-card is-left-thumb"
+        data-modal="m2"
+        tabindex="0"
+        role="button"
+        aria-controls="m2"
+      >
+        <img
+          class="sh-project-thumb"
+          src="https://sites.psu.edu/shollerlab/files/2026/01/OX-DOX-OPA_Figure_trimmed.jpg"
+          alt="Schematic showing oxaliplatin, doxorubicin, and lipid signaling modulators"
+        />
+        <div class="sh-project-content">
+          <h3>Adaptive-Immune Priming Strategy</h3>
+          <p class="sh-project-short">
+            Pairing a sphingolipid-pathway modulator with
+            oxaliplatin/doxorubicin to trigger durable immune surveillance in
+            relapsed neuroblastoma.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="sh-project-card is-contain-thumb"
+        data-modal="m3"
+        tabindex="0"
+        role="button"
+        aria-controls="m3"
+      >
+        <img
+          class="sh-project-thumb"
+          src="https://sites.psu.edu/shollerlab/files/2026/01/Screenshot_trimmed.png"
+          alt="Scientist preparing mRNA vaccine reagents"
+        />
+        <div class="sh-project-content">
+          <h3>Patient-Derived mRNA Vaccines</h3>
+          <p class="sh-project-short">
+            Translating genomic profiling of neuroblastoma into GMP-ready,
+            multi-antigen mRNA payloads tailored to each child.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="sh-project-card"
+        data-modal="m8"
+        tabindex="0"
+        role="button"
+        aria-controls="m8"
+      >
+        <img
+          class="sh-project-thumb"
+          src="https://sites.psu.edu/shollerlab/files/2026/04/warren-umoh-qycBqByWIY-unsplash.jpg"
+          alt="Sequencing workflow in the laboratory"
+        />
+        <div class="sh-project-content">
+          <h3>Integrated Long-Read & Single-Cell Sequencing</h3>
+          <p class="sh-project-short">
+            Building high-performance computing workflows for PromethION data
+            that resolve heterogeneity and microenvironments.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="sh-project-card"
+        data-modal="m4"
+        tabindex="0"
+        role="button"
+        aria-controls="m4"
+      >
+        <img
+          class="sh-project-thumb"
+          src="https://sites.psu.edu/shollerlab/files/2026/01/organoid.jpg"
+          alt="Lab dishes containing 3D organoid cultures"
+        />
+        <div class="sh-project-content">
+          <h3>3D Patient-Derived Organoids</h3>
+          <p class="sh-project-short">
+            Scaling patient-matched organoids to preserve heterogeneity and
+            microenvironment cues for ex vivo therapeutic testing.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="sh-project-card"
+        data-modal="m12"
+        tabindex="0"
+        role="button"
+        aria-controls="m12"
+      >
+        <img
+          class="sh-project-thumb"
+          src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1200&q=80"
+          alt="Computational genomics analysis for neoantigen discovery"
+        />
+        <div class="sh-project-content">
+          <h3>Neoantigen Discovery for Personalized mRNA Vaccines</h3>
+          <p class="sh-project-short">
+            Combining computational pipelines with our deep patient database to
+            identify patient-specific neoepitopes for individualized cancer
+            vaccines with minimal off-target risk.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="sh-project-card"
+        data-modal="m5"
+        tabindex="0"
+        role="button"
+        aria-controls="m5"
+      >
+        <img
+          class="sh-project-thumb"
+          src="https://sites.psu.edu/shollerlab/files/2025/12/ALK.png"
+          alt="Graphic illustrating ALK mutation modeling"
+        />
+        <div class="sh-project-content">
+          <h3>ALK Inhibitor Sensitivity Mapping</h3>
+          <p class="sh-project-short">
+            Defining how a novel ALK mutation responds to contemporary kinase
+            inhibitors and structure-guided combinations.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="sh-project-card"
+        data-modal="m11"
+        tabindex="0"
+        role="button"
+        aria-controls="m11"
+      >
+        <img
+          class="sh-project-thumb"
+          src="https://sites.psu.edu/shollerlab/files/2025/12/DIPG-IMAGE-1.png"
+          alt="Microscopy collage highlighting DIPG combination therapy"
+        />
+        <div class="sh-project-content">
+          <h3>Combinatorial Targeted Therapy in DIPG</h3>
+          <p class="sh-project-short">
+            Pairing temozolomide with trametinib, Ribociclib, and Everolimus to
+            push pediatric DIPG cultures toward 45–50% cell death versus single
+            agents.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="sh-project-card"
+        data-modal="m6"
+        tabindex="0"
+        role="button"
+        aria-controls="m6"
+      >
+        <img
+          class="sh-project-thumb"
+          src="https://sites.psu.edu/shollerlab/files/2025/12/AMXT-1501-DFMO-Graphic.jpeg"
+          alt="Diagram of DFMO and AMXT-1501 cardiac monitoring concept"
+        />
+        <div class="sh-project-content">
+          <h3>Polyamine Modulation Cardiac Safety</h3>
+          <p class="sh-project-short">
+            Parsing how DFMO + AMXT-1501 maintenance protocols interact with
+            cardiomyocytes to keep promising regimens safe.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="sh-project-card"
+        data-modal="m7"
+        tabindex="0"
+        role="button"
+        aria-controls="m7"
+      >
+        <img
+          class="sh-project-thumb"
+          src="https://sites.psu.edu/shollerlab/files/2025/12/ATRT.png"
+          alt="Illustration of GSK3B signaling in ATRT"
+        />
+        <div class="sh-project-content">
+          <h3>GSK3B Pathway Steering</h3>
+          <p class="sh-project-short">
+            Targeting convergent SHH/WNT/MYC signaling in ETMR and ATRT with
+            selective kinase and epigenetic modulation.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="sh-project-card"
+        data-modal="m9"
+        tabindex="0"
+        role="button"
+        aria-controls="m9"
+      >
+        <img
+          class="sh-project-thumb"
+          src="https://sites.psu.edu/shollerlab/files/2025/12/Screenshot-2025-12-17-at-12.27.47-PM.png"
+          alt="Microscope slide representing LIN28 research"
+        />
+        <div class="sh-project-content">
+          <h3>LIN28/let-7 Axis Modulation in ETMR</h3>
+          <p class="sh-project-short">
+            Leveraging polyamine inhibition to reset the LIN28/let-7 balance and
+            temper primitive embryonal tumor growth.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div
+  class="sh-modal-backdrop"
+  id="m1"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="m1-title"
+>
+  <div class="sh-modal">
+    <div class="sh-modal-header">
+      <h3 id="m1-title">
+        Sequential Senescence-Targeted Maintenance for DFMO-Sensitized HRNB
+      </h3>
+      <button class="sh-modal-close" aria-label="Close modal">×</button>
+    </div>
+    <div class="sh-modal-body">
+      <div class="sh-modal-media">
+        <img
+          src="https://sites.psu.edu/shollerlab/files/2026/01/VID1090_C6_1-ezgif.com-speed.gif"
+          alt="Microscopy figure illustrating DFMO and senolytic sequencing"
+        />
+      </div>
+      <div>
+        <div class="sh-modal-meta">
+          High-Risk Neuroblastoma • Senescence & Senolytics
+        </div>
+        <p>
+          <strong>Purpose:</strong> Determine how difluoromethylornithine
+          (DFMO)–driven senescence can be converted into rapid tumor clearance
+          by adding a selective senolytic agent such as venetoclax during
+          maintenance therapy. We quantify the temporal window in which
+          polyamine depletion stabilizes growth arrest yet heightens BCL-2
+          dependence.
+        </p>
+        <p>
+          Map transcriptional and metabolic signatures that forecast response
+          across cell lines, patient-derived organoids, and syngeneic mouse
+          models. Sequential DFMO→senolytic schedules are benchmarked for
+          apoptotic conversion, SASP modulation, and resistance liabilities such
+          as MCL-1 induction.
+        </p>
+        <p>
+          Translate the most effective schedule into a clinical-trial concept by
+          identifying pharmacodynamic biomarkers (polyamines, SASP cytokines,
+          BH3 profiles) that can be tracked non-invasively in DFMO-maintained
+          patients.
+        </p>
+        <p class="sh-modal-impact">
+          <strong>Patient impact:</strong> A well-timed senescence-to-apoptosis
+          relay could significantly reduce minimal residual disease, lower
+          relapse rates, and maintain the low-toxicity profile that families
+          expect from DFMO maintenance.
+        </p>
+        <p class="sh-modal-keywords">
+          <strong>Keywords:</strong> High-risk neuroblastoma, DFMO, venetoclax,
+          senescence, senolytic therapy, BCL-2 dependence, polyamine metabolism
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="sh-modal-backdrop"
+  id="m2"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="m2-title"
+>
+  <div class="sh-modal">
+    <div class="sh-modal-header">
+      <h3 id="m2-title">
+        Adaptive-Immune Priming Strategy Layering Lipid Modulators onto OXA/DOX
+      </h3>
+      <button class="sh-modal-close" aria-label="Close modal">×</button>
+    </div>
+    <div class="sh-modal-body">
+      <div class="sh-modal-media">
+        <img
+          src="https://sites.psu.edu/shollerlab/files/2026/01/OX-DOX-OPA_Figure_trimmed.jpg"
+          alt="Schematic showing oxaliplatin, doxorubicin, and lipid signaling modulators"
+        />
+      </div>
+      <div>
+        <div class="sh-modal-meta">
+          Relapsed Neuroblastoma • Immunogenic Cell Death
+        </div>
+        <p>
+          <strong>Purpose:</strong> Evaluate whether adding the sphingosine
+          kinase 2 inhibitor opaganib to oxaliplatin/doxorubicin (OXA/DOX)
+          intensifies immunogenic cell death (ICD) in high-risk neuroblastoma.
+          We monitor ER stress signals, calreticulin exposure, and HMGB1 release
+          across MYCN-amplified and non-amplified models.
+        </p>
+        <p>
+          Determine how sphingolipid metabolite shifts influence antigen
+          presentation, dendritic-cell priming, and adaptive immune memory in
+          immune-competent mouse models, while maintaining dosing parameters
+          that are clinically relevant.
+        </p>
+        <p class="sh-modal-impact">
+          <strong>Patient impact:</strong> A chemo-immunologic backbone that
+          wakes up the immune system could extend remissions for relapsed
+          patients without dramatically increasing toxicity.
+        </p>
+        <p class="sh-modal-keywords">
+          <strong>Keywords:</strong> Relapsed neuroblastoma, opaganib,
+          oxaliplatin, doxorubicin, sphingolipid signaling, immunogenic cell
+          death, adaptive immunity
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="sh-modal-backdrop"
+  id="m3"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="m3-title"
+>
+  <div class="sh-modal">
+    <div class="sh-modal-header">
+      <h3 id="m3-title">
+        Patient-Derived mRNA Vaccine Therapy Targeting Multi-Antigen
+        Neuroblastoma
+      </h3>
+      <button class="sh-modal-close" aria-label="Close modal">×</button>
+    </div>
+    <div class="sh-modal-body">
+      <div class="sh-modal-media">
+        <img
+          src="https://sites.psu.edu/shollerlab/files/2026/01/Screenshot_trimmed.png"
+          alt="Scientist preparing mRNA vaccine reagents"
+        />
+      </div>
+      <div>
+        <div class="sh-modal-meta">Neuroblastoma • Custom Immunotherapy</div>
+        <p>
+          <strong>Purpose:</strong> Translate sequencing of patient-derived
+          neuroblastoma (NB) tumors and xenografts into multi-antigen mRNA
+          vaccines that address MYCN-amplified disease and antigen
+          heterogeneity. The NTxScribe platform enables rapid IVT production
+          with GMP-minded quality control.
+        </p>
+        <p>
+          Benchmark vaccine candidates in murine models engrafted with
+          patient-derived NB cells to measure TAA coverage, T-cell persistence,
+          trafficking, and cytokine profiles relative to CAR T-cell benchmarks.
+        </p>
+        <p>
+          Develop an informatics pipeline that selects antigen combinations most
+          likely to overcome immune exhaustion and suppressive tumor
+          microenvironments, enabling personalized vaccine recipes within days
+          of biopsy.
+        </p>
+        <p class="sh-modal-impact">
+          <strong>Patient impact:</strong> Families gain truly personalized
+          immunotherapy options that may complement or replace antibody-based
+          maintenance when anti-GD2 regimens plateau.
+        </p>
+        <p class="sh-modal-keywords">
+          <strong>Keywords:</strong> Neuroblastoma, mRNA vaccine,
+          tumor-associated antigens, MYCN amplification, patient-derived
+          xenograft, immunotherapy
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="sh-modal-backdrop"
+  id="m4"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="m4-title"
+>
+  <div class="sh-modal">
+    <div class="sh-modal-header">
+      <h3 id="m4-title">
+        3D Patient-Derived Organoid Generation for Rapid Ex Vivo Decisions
+      </h3>
+      <button class="sh-modal-close" aria-label="Close modal">×</button>
+    </div>
+    <div class="sh-modal-body">
+      <div class="sh-modal-media">
+        <img
+          src="https://sites.psu.edu/shollerlab/files/2026/01/organoid.jpg"
+          alt="Lab dishes containing 3D organoid cultures"
+        />
+      </div>
+      <div>
+        <div class="sh-modal-meta">
+          Functional Models • Ex Vivo Decision Support
+        </div>
+        <p>
+          <strong>Purpose:</strong> Establish standardized protocols for
+          expanding patient tumors into 3D organoids that retain histology,
+          genomic drivers, microenvironmental signaling, and therapy response
+          traits.
+        </p>
+        <p>
+          Deploy these models for rapid combination testing, live imaging, and
+          biomarker discovery so clinicians can preview toxicity or efficacy
+          without exposing patients to trial-and-error regimens.
+        </p>
+        <p class="sh-modal-impact">
+          <strong>Patient impact:</strong> Organoid-guided decisions allow
+          clinicians to prioritize regimens with the highest probability of
+          success while sparing children from ineffective therapies.
+        </p>
+        <p class="sh-modal-keywords">
+          <strong>Keywords:</strong> Patient-derived organoids, ex vivo
+          screening, tumor microenvironment, therapy prioritization, pediatric
+          solid tumors
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="sh-modal-backdrop"
+  id="m12"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="m12-title"
+>
+  <div class="sh-modal">
+    <div class="sh-modal-header">
+      <h3 id="m12-title">
+        Computational Neoantigen Discovery for Individualized mRNA Vaccines
+      </h3>
+      <button class="sh-modal-close" aria-label="Close modal">×</button>
+    </div>
+    <div class="sh-modal-body">
+      <div class="sh-modal-media">
+        <img
+          src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1200&q=80"
+          alt="Computational genomics analysis for neoantigen discovery"
+        />
+      </div>
+      <div>
+        <div class="sh-modal-meta">
+          Precision Immunotherapy • Neoantigen & Neoepitope Discovery
+        </div>
+        <p>
+          <strong>Purpose:</strong> Use computational genomics, epitope
+          prediction, and our extensive patient database to identify novel
+          neoantigens and neoepitopes in a patient-specific manner. We integrate
+          tumor sequencing, expression data, and clinical annotation to
+          prioritize targets that are unique to each child’s cancer.
+        </p>
+        <p>
+          Build individualized mRNA vaccine designs that encode the highest
+          confidence neoantigen set for each patient, aiming to focus immune
+          recognition on tumor-specific mutations while avoiding normal tissue
+          targets and reducing off-target effects.
+        </p>
+        <p>
+          Continuously refine the discovery pipeline by learning from our
+          growing database of patient samples, treatment histories, and tumor
+          biology so vaccine selection becomes faster, more precise, and more
+          clinically actionable over time.
+        </p>
+        <p class="sh-modal-impact">
+          <strong>Patient impact:</strong> This approach supports truly
+          personalized cancer vaccines tailored to the molecular fingerprint of
+          each patient’s tumor, with the goal of improving antitumor immunity
+          while minimizing unintended toxicity.
+        </p>
+        <p class="sh-modal-keywords">
+          <strong>Keywords:</strong> Neoantigens, neoepitopes, personalized mRNA
+          vaccines, computational genomics, precision immunotherapy,
+          patient-specific targeting, pediatric oncology
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="sh-modal-backdrop"
+  id="m5"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="m5-title"
+>
+  <div class="sh-modal">
+    <div class="sh-modal-header">
+      <h3 id="m5-title">
+        ALK Inhibitor Sensitivity Mapping in SL01330 with C1579S Variant
+      </h3>
+      <button class="sh-modal-close" aria-label="Close modal">×</button>
+    </div>
+    <div class="sh-modal-body">
+      <div class="sh-modal-media">
+        <img
+          src="https://sites.psu.edu/shollerlab/files/2025/12/ALK.png"
+          alt="Graphic illustrating ALK mutation modeling"
+        />
+      </div>
+      <div>
+        <div class="sh-modal-meta">Precision Oncology • Novel ALK Variant</div>
+        <p>
+          <strong>Purpose:</strong> Characterize the C1579S ALK mutation
+          discovered in a pediatric neuroblastoma patient by integrating
+          structural modeling, phospho-signaling analyses, and inhibitor
+          response curves across a custom SL01330 cell line.
+        </p>
+        <p>
+          Compare next-generation ALK inhibitors and rational combinations to
+          determine which regimens overcome potential resistance liabilities,
+          then validate in vivo using xenografts that mirror the patient’s tumor
+          biology.
+        </p>
+        <p class="sh-modal-impact">
+          <strong>Patient impact:</strong> Data-driven selection of ALK
+          inhibitors for rare variants accelerates personalized care and informs
+          future precision-oncology protocols.
+        </p>
+        <p class="sh-modal-keywords">
+          <strong>Keywords:</strong> Neuroblastoma, ALK mutation, tyrosine
+          kinase, targeted therapy, precision oncology, structure-function
+          analysis
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="sh-modal-backdrop"
+  id="m11"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="m11-title"
+>
+  <div class="sh-modal">
+    <div class="sh-modal-header">
+      <h3 id="m11-title">Combinatorial Targeted Therapy in DIPG</h3>
+      <button class="sh-modal-close" aria-label="Close modal">×</button>
+    </div>
+    <div class="sh-modal-body">
+      <div class="sh-modal-media">
+        <img
+          src="https://sites.psu.edu/shollerlab/files/2025/12/DIPG-IMAGE-1.png"
+          alt="Microscopy collage highlighting DIPG combination therapy"
+        />
+      </div>
+      <div>
+        <div class="sh-modal-meta">
+          Precision Oncology • Combinatorial Targeted Therapy in DIPG
+        </div>
+        <p>
+          <strong>Purpose:</strong> Evaluate whether rational combinations of
+          temozolomide, trametinib, Ribociclib, and Everolimus improve the
+          response of diffuse intrinsic pontine glioma (DIPG), a pediatric brain
+          tumor with limited therapeutic options. Patient-derived DIPG cell
+          lines with and without the H3K27M mutation (SL01469, SL00731,
+          SU-DIPG-33) were exposed to single agents and high/low-dose
+          combinations for 72 hours with viability and protein endpoints.
+        </p>
+        <p>
+          Combination regimens triggered roughly 45–50% cell death across
+          several models while reducing phospho-p70S6K, phospho-Rb, and
+          phospho-ERK1/2 signaling alongside lower MGMT expression, indicating
+          reinforced cell-cycle disruption and DNA-damage responses relative to
+          monotherapies.
+        </p>
+        <p class="sh-modal-impact">
+          <strong>Patient impact:</strong> Supports a combination targeted
+          therapy strategy for DIPG and presents a preclinical rationale to
+          upgrade regimens where current standards remain ineffective.
+        </p>
+        <p class="sh-modal-keywords">
+          <strong>Keywords:</strong> DIPG, temozolomide, trametinib, Ribociclib,
+          Everolimus, H3K27M, combination targeted therapy
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="sh-modal-backdrop"
+  id="m6"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="m6-title"
+>
+  <div class="sh-modal">
+    <div class="sh-modal-header">
+      <h3 id="m6-title">
+        Polyamine Modulation Cardiac Safety During DFMO + AMXT-1501 Regimens
+      </h3>
+      <button class="sh-modal-close" aria-label="Close modal">×</button>
+    </div>
+    <div class="sh-modal-body">
+      <div class="sh-modal-media">
+        <img
+          src="https://sites.psu.edu/shollerlab/files/2025/12/AMXT-1501-DFMO-Graphic.jpeg"
+          alt="Diagram of DFMO and AMXT-1501 cardiac monitoring concept"
+        />
+      </div>
+      <div>
+        <div class="sh-modal-meta">Safety Science • DFMO + AMXT-1501</div>
+        <p>
+          <strong>Purpose:</strong> Investigate whether DFMO (intracellular
+          polyamine blockade), AMXT-1501 (polyamine transport inhibition), or
+          the combination contributes to reported adverse cardiac events in
+          pediatric patients.
+        </p>
+        <p>
+          Utilize iPSC-derived cardiomyocytes, biomarker assays, and functional
+          imaging to pinpoint stress pathways, then define mitigation strategies
+          or monitoring algorithms that keep maintenance regimens safe.
+        </p>
+        <p class="sh-modal-impact">
+          <strong>Patient impact:</strong> Ensuring heart health protects access
+          to effective polyamine-targeted maintenance without unexpected
+          toxicity.
+        </p>
+        <p class="sh-modal-keywords">
+          <strong>Keywords:</strong> Polyamine inhibition, DFMO, AMXT-1501,
+          cardiotoxicity, safety modeling, pediatric oncology
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="sh-modal-backdrop"
+  id="m7"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="m7-title"
+>
+  <div class="sh-modal">
+    <div class="sh-modal-header">
+      <h3 id="m7-title">
+        GSK3B Pathway Steering in ETMR & ATRT with 9-ING-41 ± HDAC Modulation
+      </h3>
+      <button class="sh-modal-close" aria-label="Close modal">×</button>
+    </div>
+    <div class="sh-modal-body">
+      <div class="sh-modal-media">
+        <img
+          src="https://sites.psu.edu/shollerlab/files/2025/12/ATRT.png"
+          alt="Illustration of GSK3B signaling in ATRT"
+        />
+      </div>
+      <div>
+        <div class="sh-modal-meta">Rare CNS Tumors • Pathway Control</div>
+        <p>
+          <strong>Purpose:</strong> Define how the GSK3B inhibitor 9-ING-41,
+          with or without HDAC modulation, suppresses SHH/WNT/MYC-driven
+          programs in ETMR and ATRT. We interrogate apoptosis markers,
+          neurosphere health, and p53 pathway activation.
+        </p>
+        <p>
+          Optimize dosing, identify predictive biomarkers, and chart resistance
+          mechanisms so that GSK3B-targeted therapies can transition into
+          rational clinical protocols for tumors with dismal survival.
+        </p>
+        <p class="sh-modal-impact">
+          <strong>Patient impact:</strong> Offers a targeted-therapy roadmap
+          where options are otherwise limited to intensive surgery,
+          chemotherapy, and high-risk radiation.
+        </p>
+        <p class="sh-modal-keywords">
+          <strong>Keywords:</strong> ETMR, ATRT, GSK3B, 9-ING-41, SHH/WNT/MYC,
+          apoptosis, pediatric brain tumors
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="sh-modal-backdrop"
+  id="m8"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="m8-title"
+>
+  <div class="sh-modal">
+    <div class="sh-modal-header">
+      <h3 id="m8-title">
+        Integrated Long-Read & Single-Cell Sequencing Pipelines for PromethION
+        24
+      </h3>
+      <button class="sh-modal-close" aria-label="Close modal">×</button>
+    </div>
+    <div class="sh-modal-body">
+      <div class="sh-modal-media">
+        <img
+          src="https://sites.psu.edu/shollerlab/files/2026/04/warren-umoh-qycBqByWIY-unsplash.jpg"
+          alt="Sequencing workflow in the laboratory"
+        />
+      </div>
+      <div>
+        <div class="sh-modal-meta">Genomics • High-Performance Pipelines</div>
+        <p>
+          <strong>Purpose:</strong> Streamline Oxford Nanopore PromethION 24
+          workflows (basecalling, alignment, variation analysis) using
+          high-performance computing so that terabyte-scale runs are processed
+          within actionable timelines.
+        </p>
+        <p>
+          Integrate single-cell DNA/RNA data with long-read assemblies to
+          resolve tumor heterogeneity, microenvironment composition, and
+          differential expression between malignant and normal compartments.
+        </p>
+        <p class="sh-modal-impact">
+          <strong>Patient impact:</strong> Faster, richer genomic reports
+          empower clinicians to tailor therapy based on structural variants,
+          clonal diversity, and microenvironment signals captured directly from
+          patient samples.
+        </p>
+        <p class="sh-modal-keywords">
+          <strong>Keywords:</strong> PromethION, long-read sequencing,
+          single-cell genomics, HPC pipelines, tumor heterogeneity, pediatric
+          oncology
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="sh-modal-backdrop"
+  id="m9"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="m9-title"
+>
+  <div class="sh-modal">
+    <div class="sh-modal-header">
+      <h3 id="m9-title">
+        LIN28/let-7 Axis Modulation in Infant ETMR via Polyamine Restriction
+      </h3>
+      <button class="sh-modal-close" aria-label="Close modal">×</button>
+    </div>
+    <div class="sh-modal-body">
+      <div class="sh-modal-media">
+        <img
+          src="https://sites.psu.edu/shollerlab/files/2025/12/Screenshot-2025-12-17-at-12.27.47-PM.png"
+          alt="Microscope slide representing LIN28 research"
+        />
+      </div>
+      <div>
+        <div class="sh-modal-meta">
+          Embryonal Tumors • Differentiation Therapy
+        </div>
+        <p>
+          <strong>Purpose:</strong> Use DFMO-mediated polyamine inhibition to
+          suppress LIN28, elevate let-7 microRNAs, and force ETMR cells out of
+          their primitive, highly proliferative state. We quantify effects on
+          MYCN, glycolysis, and neurosphere formation.
+        </p>
+        <p>
+          Explore complementary agents that stabilize the LIN28/let-7 axis
+          without imposing neurotoxic radiation burdens on very young patients.
+        </p>
+        <p class="sh-modal-impact">
+          <strong>Patient impact:</strong> Offers a targeted, potentially
+          low-toxicity option for infants with ETMR who cannot tolerate
+          conventional radiation.
+        </p>
+        <p class="sh-modal-keywords">
+          <strong>Keywords:</strong> ETMR, LIN28, let-7 microRNAs, DFMO,
+          polyamine inhibition, differentiation therapy
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="sh-modal-backdrop"
+  id="m10"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="m10-title"
+>
+  <div class="sh-modal">
+    <div class="sh-modal-header">
+      <h3 id="m10-title">
+        Translational Pediatric Biobank & Model Sharing Network
+      </h3>
+      <button class="sh-modal-close" aria-label="Close modal">×</button>
+    </div>
+    <div class="sh-modal-body">
+      <div class="sh-modal-media">
+        <img
+          src="https://images.unsplash.com/photo-1486825586573-7131f7991bdd?auto=format&fit=crop&w=1200&q=80"
+          alt="Biobank freezer with organized vials"
+        />
+      </div>
+      <div>
+        <div class="sh-modal-meta">Infrastructure • Collaboration Hub</div>
+        <p>
+          <strong>Purpose:</strong> Sustain a repository of 70,000+ pediatric
+          cancer specimens, organoids, and animal-derived models sourced from
+          more than 50 partner sites, processed with rigorous ethical and
+          regulatory standards.
+        </p>
+        <p>
+          Build streamlined intake, annotation, and sharing workflows so
+          collaborators can access biospecimens and matched data quickly,
+          fueling multi-institutional discovery.
+        </p>
+        <p class="sh-modal-impact">
+          <strong>Patient impact:</strong> Every contribution accelerates
+          translational studies worldwide, ensuring no child fights alone and
+          that local samples power global breakthroughs.
+        </p>
+        <p class="sh-modal-keywords">
+          <strong>Keywords:</strong> Biobanking, specimen processing,
+          patient-derived organoids, data sharing, pediatric oncology network
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const cards = document.querySelectorAll(".sh-project-card");
+    const modals = document.querySelectorAll(".sh-modal-backdrop");
+    const modalHeaders = document.querySelectorAll(".sh-modal-header");
+
+    const closeAll = () => {
+      modals.forEach((modal) => modal.classList.remove("is-open"));
+      document.body.style.overflow = "";
+    };
+
+    const openModal = (id) => {
+      const modal = document.getElementById(id);
+      if (!modal) return;
+      closeAll();
+      modal.classList.add("is-open");
+      document.body.style.overflow = "hidden";
+      const closeBtn = modal.querySelector(".sh-modal-close");
+      if (closeBtn) closeBtn.focus();
+    };
+
+    modalHeaders.forEach((header) => {
+      let rafId;
+      const animateToCenter = () => {
+        header.classList.remove("is-hovered");
+        header.style.setProperty("--gradient-pos", "50% 50%");
+        header.style.setProperty("--glow-x", "50%");
+        header.style.setProperty("--glow-y", "50%");
+      };
+
+      header.addEventListener("pointermove", (event) => {
+        const rect = header.getBoundingClientRect();
+        const rawX = Math.min(
+          Math.max(((event.clientX - rect.left) / rect.width) * 100, 0),
+          100,
+        );
+        const rawY = Math.min(
+          Math.max(((event.clientY - rect.top) / rect.height) * 100, 0),
+          100,
+        );
+        const easedX = 50 + (rawX - 50) * 0.55;
+        const easedY = 50 + (rawY - 50) * 0.55;
+        header.classList.add("is-hovered");
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(() => {
+          header.style.setProperty("--gradient-pos", `${easedX}% 50%`);
+          header.style.setProperty("--glow-x", `${easedX}%`);
+          header.style.setProperty("--glow-y", `${easedY}%`);
+          rafId = null;
+        });
+      });
+
+      header.addEventListener("pointerleave", animateToCenter);
+      animateToCenter();
+    });
+
+    cards.forEach((card) => {
+      const id = card.getAttribute("data-modal");
+      card.addEventListener("click", () => openModal(id));
+      card.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          openModal(id);
+        }
+      });
+    });
+
+    modals.forEach((modal) => {
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) closeAll();
+      });
+      const btn = modal.querySelector(".sh-modal-close");
+      if (btn) btn.addEventListener("click", closeAll);
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeAll();
+    });
+  });
+</script>

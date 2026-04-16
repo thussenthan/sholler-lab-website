@@ -1,0 +1,151 @@
+<footer class="sh-site-footer">
+  <div class="sh-site-footer-inner">
+    <!-- ROW 1 (Copyright left, SOCIAL right) -->
+    <div class="sh-site-footer-row">
+      <!-- left aligned -->
+      <div class="sh-site-footer-copy">
+        Copyright <span id="sh-footer-year">2026</span> © The Pennsylvania State University
+      </div>
+
+      <!-- right aligned -->
+      <div class="sh-footer-actions">
+        <div class="sh-footer-social-row">
+          <div class="sh-footer-social" data-social-set="beatcc"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sh-site-footer-spacer"></div>
+
+    <!-- ROW 2 (POLICIES left, DESIGN CREDIT right) -->
+    <div class="sh-site-footer-row">
+      <!-- left aligned -->
+      <div class="sh-site-footer-links">
+        <a
+          href="https://www.psu.edu/web-privacy-statement"
+          target="_blank"
+          rel="noopener"
+          >Privacy</a
+        >
+        ·
+        <a
+          href="https://policy.psu.edu/policies/ad85"
+          target="_blank"
+          rel="noopener"
+          >Non-Discrimination</a
+        >
+        ·
+        <a
+          href="https://policy.psu.edu/policies/ad91"
+          target="_blank"
+          rel="noopener"
+          >Equal Opportunity</a
+        >
+        ·
+        <a
+          href="https://www.psu.edu/accessibilitystatement"
+          target="_blank"
+          rel="noopener"
+          >Accessibility</a
+        >
+        ·
+        <a
+          href="https://www.psu.edu/legal-statements"
+          target="_blank"
+          rel="noopener"
+          >Legal</a
+        >
+      </div>
+
+      <!-- right aligned -->
+      <div class="sh-footer-credit-wrap">
+        <a
+          href="https://github.com/thussenthan"
+          target="_blank"
+          rel="noopener"
+          class="sh-footer-credit"
+          >Website designed by Thussenthan Walter-Angelo</a
+        >
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var footer = document.querySelector(".sh-site-footer");
+      if (!footer) return;
+      var videoButtons = document.querySelectorAll("[data-video-play='true']");
+      var socialSets = document.querySelectorAll("[data-social-set='beatcc']");
+      const credit = document.querySelector(".sh-footer-credit");
+      const year = document.querySelector("#sh-footer-year");
+      var socialLinks = [
+        {
+          href: "https://www.facebook.com/beatccresearch/",
+          iconClass: "fa-facebook-f",
+          label: "Facebook",
+          platformClass: "fb",
+        },
+        {
+          href: "https://www.instagram.com/beatchildhoodcancerresearch/",
+          iconClass: "fa-instagram",
+          label: "Instagram",
+          platformClass: "in",
+        },
+        {
+          href: "https://www.linkedin.com/company/beat-childhood-cancer-research-consortium/posts/?feedView=all",
+          iconClass: "fa-linkedin-in",
+          label: "LinkedIn",
+          platformClass: "li",
+        },
+      ];
+
+      if (year) year.textContent = new Date().getFullYear();
+
+      for (var setIndex = 0; setIndex < socialSets.length; setIndex += 1) {
+        var container = socialSets[setIndex];
+        var markup = "";
+        for (var linkIndex = 0; linkIndex < socialLinks.length; linkIndex += 1) {
+          var link = socialLinks[linkIndex];
+          markup +=
+            '<a href="' +
+            link.href +
+            '" class="sh-social-icon ' +
+            link.platformClass +
+            '" target="_blank" rel="noopener" aria-label="' +
+            link.label +
+            '">' +
+            '<i class="fab ' +
+            link.iconClass +
+            '" aria-hidden="true"></i>' +
+            "</a>";
+        }
+        container.innerHTML = markup;
+      }
+
+      for (var i = 0; i < videoButtons.length; i += 1) {
+        videoButtons[i].addEventListener("click", function () {
+          this.classList.add("is-hidden");
+          var iframe = this.parentElement.querySelector("iframe");
+          if (iframe && iframe.src.indexOf("autoplay=1") === -1) {
+            iframe.src += "&autoplay=1";
+          }
+        });
+      }
+
+      if (!credit) return;
+      const clamp = (value) => Math.min(Math.max(value, 0), 1);
+      const updateGradient = (event) => {
+        const rect = credit.getBoundingClientRect();
+        const x = clamp((event.clientX - rect.left) / rect.width);
+        const y = clamp((event.clientY - rect.top) / rect.height);
+        credit.style.setProperty("--credit-gradient-x", x);
+        credit.style.setProperty("--credit-gradient-y", y);
+      };
+      const resetGradient = () => {
+        credit.style.removeProperty("--credit-gradient-x");
+        credit.style.removeProperty("--credit-gradient-y");
+      };
+      credit.addEventListener("mousemove", updateGradient);
+      credit.addEventListener("mouseleave", resetGradient);
+    })();
+  </script>
+</footer>
