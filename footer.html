@@ -73,7 +73,6 @@
     (function () {
       var footer = document.querySelector(".sh-site-footer");
       if (!footer) return;
-      var videoButtons = document.querySelectorAll("[data-video-play='true']");
       var socialSets = document.querySelectorAll("[data-social-set='beatcc']");
       const credit = document.querySelector(".sh-footer-credit");
       const year = document.querySelector("#sh-footer-year");
@@ -119,16 +118,6 @@
             "</a>";
         }
         container.innerHTML = markup;
-      }
-
-      for (var i = 0; i < videoButtons.length; i += 1) {
-        videoButtons[i].addEventListener("click", function () {
-          this.classList.add("is-hidden");
-          var iframe = this.parentElement.querySelector("iframe");
-          if (iframe && iframe.src.indexOf("autoplay=1") === -1) {
-            iframe.src += "&autoplay=1";
-          }
-        });
       }
 
       if (!credit) return;

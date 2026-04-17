@@ -65,6 +65,34 @@ body {
   padding-bottom: 0 !important;
 }
 
+/* Remove Divi's row/column max-width so our .sh-container handles all width
+   constraints — prevents the row cap (typically 1080px) from making the hero
+   narrower than the header. */
+body .et_pb_section,
+body .et_pb_row,
+body .et_pb_column,
+body .et_pb_code,
+body .et_pb_code_inner {
+  max-width: none !important;
+  width: 100% !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Pure-CSS flush for the home hero — no JS class required, so it applies
+   before any script runs. Eliminates the brief white gap on page load.
+   :has() is supported in all modern browsers (Chrome 105+, Safari 15.4+, FF 121+). */
+body .et_pb_section:has(.sh-home-hero),
+body .et_pb_row:has(.sh-home-hero),
+body .et_pb_column:has(.sh-home-hero),
+body .et_pb_code:has(.sh-home-hero),
+body .et_pb_code_inner:has(.sh-home-hero) {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
 #main-content .container:before {
   display: none !important;
 }
@@ -109,6 +137,19 @@ body {
 #main-content .et_pb_code_inner > .sh-site-header + *,
 #main-content .et_pb_code_inner > .sh-site-header + .sh-section,
 #main-content .et_pb_code_inner > .sh-site-header + .sh-hero {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Zero out the Divi section/row that wraps the first page content block.
+   Uses both sibling and host-section approaches to cover different Divi
+   structures, and targets the inner content element directly too. */
+body:not(.et-fb) .sh-header-host-section ~ .et_pb_section,
+body:not(.et-fb) .sh-header-host-section + .et_pb_section,
+body:not(.et-fb) .sh-header-host-section + .et_pb_section .et_pb_row,
+body:not(.et-fb) .sh-header-host-section + .et_pb_section .et_pb_column,
+body:not(.et-fb) .sh-header-host-section + .et_pb_section .et_pb_code,
+body:not(.et-fb) .sh-header-host-section + .et_pb_section .et_pb_code_inner {
   margin-top: 0 !important;
   padding-top: 0 !important;
 }
@@ -186,13 +227,30 @@ h4 {
   padding: 28px 0 !important;
 }
 
+/* Use on eyebrow-led sections that appear mid-page (not page starts). */
+.sh-section-eyebrow-gap {
+  padding-top: 52px !important;
+}
+
+.sh-page-intro.sh-section-eyebrow-gap,
+.sh-bg-soft.sh-section-tight.sh-section-eyebrow-gap {
+  padding-top: 52px !important;
+}
+
+/* Coloured-background eyebrow sections need extra external margin so the
+   background edge doesn't crowd the content above. Overrides sh-mt-32/36. */
+.sh-page-match-research-bottom.sh-section-eyebrow-gap,
+.sh-bg-soft.sh-mt-36 {
+  margin-top: 64px !important;
+}
+
 .sh-publications-summary {
-  padding-bottom: 8px !important;
+  padding-bottom: 20px !important;
 }
 
 .sh-publications-overview {
-  padding-top: 12px;
-  padding-bottom: 20px;
+  padding-top: 20px;
+  padding-bottom: 26px;
 }
 
 .sh-publications-list {
@@ -212,6 +270,10 @@ h4 {
 }
 
 .sh-page-top {
+  padding-top: var(--sh-page-edge-space) !important;
+}
+
+.sh-page-intro {
   padding-top: var(--sh-page-edge-space) !important;
 }
 
@@ -405,6 +467,10 @@ h4 {
     padding-top: var(--sh-page-edge-space-mobile) !important;
   }
 
+  .sh-page-intro {
+    padding-top: var(--sh-page-edge-space-mobile) !important;
+  }
+
   .sh-page-match-research-top {
     padding-top: var(--sh-page-edge-space-mobile) !important;
   }
@@ -438,6 +504,20 @@ h4 {
 
   .sh-section-top-compact {
     padding: 0;
+  }
+
+  .sh-section-eyebrow-gap {
+    padding-top: 40px !important;
+  }
+
+  .sh-page-intro.sh-section-eyebrow-gap,
+  .sh-bg-soft.sh-section-tight.sh-section-eyebrow-gap {
+    padding-top: 40px !important;
+  }
+
+  .sh-page-match-research-bottom.sh-section-eyebrow-gap,
+  .sh-bg-soft.sh-mt-36 {
+    margin-top: 48px !important;
   }
 
   .sh-hero {
@@ -527,7 +607,7 @@ h4 {
   border-radius: 18px;
   overflow: hidden;
   box-shadow: 0 18px 48px rgba(0, 0, 0, 0.35);
-  background: #000;
+  background: #fff;
 }
 
 .sh-hero-media.is-playing {
@@ -564,8 +644,10 @@ h4 {
   background-position: center;
   cursor: pointer;
   transition:
+    opacity 0.3s ease,
     transform 0.3s ease,
     box-shadow 0.3s ease;
+  opacity: 1;
   pointer-events: auto !important;
   z-index: 2;
 }
@@ -676,6 +758,11 @@ h4 {
   .sh-gallery-quad {
     grid-template-columns: 1fr;
   }
+
+  /* Single-column phone: reduce cell height so 4 stacked items aren't huge */
+  .sh-home-quad .sh-gallery {
+    min-height: 160px;
+  }
 }
 
 /* --- Cards --- */
@@ -696,16 +783,19 @@ h4 {
 }
 
 /* --- Home Page --- */
-.sh-home-hero {
+.sh-home-hero,
+#main-content .sh-hero.sh-home-hero:first-child {
   background:
     linear-gradient(120deg, rgba(0, 30, 68, 0.9), rgba(0, 87, 155, 0.85)),
     url("https://sites.psu.edu/shollerlab/files/2025/11/HMC-JP-082124-campus.webp")
       center/cover no-repeat !important;
   color: #fff;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
 }
 
 .sh-home-hero-split {
-  padding: 72px 0;
+  padding: 48px 0;
 }
 
 .sh-home-cta {
@@ -746,7 +836,7 @@ h4 {
   border-radius: 18px;
   overflow: hidden;
   box-shadow: 0 18px 48px rgba(0, 0, 0, 0.35);
-  background: #000;
+  background: #fff;
 }
 
 .sh-home-collab-copy {
@@ -822,20 +912,12 @@ h4 {
   font-size: 1.03rem;
 }
 
-.sh-home-hero .sh-video-placeholder {
-  border-radius: 18px;
-  transition:
-    opacity 0.3s ease,
-    transform 0.3s ease;
-  opacity: 1;
-}
-
 .sh-people .sh-gallery,
 .sh-gallery-quad .sh-gallery {
   position: relative;
   width: 100%;
   overflow: hidden;
-  background: #000;
+  background: #fff;
 }
 
 .sh-people .sh-gallery {
@@ -861,7 +943,7 @@ h4 {
 
 .sh-home-quad {
   margin: 0 auto;
-  max-width: 980px;
+  width: min(1100px, 90%);
   gap: 8px;
 }
 
@@ -961,7 +1043,7 @@ h4 {
 }
 
 .sh-people .sh-gallery img:nth-child(1) {
-  animation-delay: 0s;
+  animation-delay: -1.62s;
 }
 
 .sh-people .sh-gallery img:nth-child(2) {
@@ -1036,6 +1118,34 @@ h4 {
     flex-direction: column;
     align-items: flex-start;
     gap: 15px;
+  }
+
+  /* Home photo quad: prevent excessive height in 2-column layout */
+  .sh-home-quad .sh-gallery {
+    min-height: 200px;
+  }
+
+  /* Alumni card: remove extra side margins that compound container padding */
+  .sh-alumni-card-gap {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* Contact map: reduce height so the map doesn't dominate on phones */
+  .sh-map-embed iframe {
+    height: 260px;
+  }
+
+  .sh-home-team-copy {
+    overflow-wrap: anywhere;
+    hyphens: auto;
+    font-size: 0.98rem;
+    line-height: 1.68;
+  }
+
+  .sh-home-team-gallery {
+    min-height: clamp(220px, 58vw, 300px) !important;
+    aspect-ratio: 4 / 3;
   }
 }
 
@@ -1133,6 +1243,10 @@ h4 {
 
 .sh-profile-meta {
   margin-bottom: 8px;
+}
+
+.sh-profile-meta a {
+  overflow-wrap: anywhere;
 }
 
 .sh-card-profile {
@@ -1272,6 +1386,15 @@ h4 {
   align-items: center;
 }
 
+.sh-people > * {
+  min-width: 0;
+}
+
+.sh-home-team-copy,
+.sh-home-team-gallery {
+  max-width: 100%;
+}
+
 @media (max-width: 800px) {
   .sh-people {
     grid-template-columns: 1fr;
@@ -1369,6 +1492,31 @@ h4 {
   margin-top: 0;
 }
 
+.sh-page-intro .sh-eyebrow {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  line-height: 1.1;
+}
+
+.sh-page-intro-header {
+  width: 100%;
+  max-width: 780px;
+}
+
+.sh-page-intro h1,
+.sh-page-intro h2 {
+  margin: 0 !important;
+  font-size: clamp(2rem, 2.6vw, 2.4rem);
+  line-height: 1.15;
+}
+
+.sh-page-intro-copy {
+  margin: 12px 0 0 !important;
+  font-size: 1.08rem;
+  line-height: 1.8;
+  color: var(--ink-muted);
+}
+
 .sh-contact-intro {
   padding-bottom: 64px;
 }
@@ -1430,6 +1578,24 @@ h4 {
   display: inline;
   max-width: none;
   vertical-align: baseline;
+  color: var(--beaver-blue);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px dotted rgba(30, 64, 124, 0.5);
+}
+
+.sh-contact-content-wrapper .sh-copy-reset:has(a[href^="mailto:"]) {
+  line-height: 1.3;
+}
+
+@media (max-width: 600px) {
+  /* Allow long email addresses to break across lines on narrow phones */
+  .sh-contact-content-wrapper .sh-copy-reset a[href^="mailto:"] {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-all;
+    font-size: 0.82rem;
+  }
 }
 
 .sh-contact-note {
@@ -1528,6 +1694,7 @@ h4 {
 /* --- Gallery --- */
 .sh-gallery-wrap {
   position: relative;
+  min-width: 0;
 }
 
 .sh-gallery {
@@ -1551,7 +1718,7 @@ h4 {
 }
 
 .sh-gallery img:nth-child(1) {
-  animation-delay: 0s;
+  animation-delay: -1.92s;
 }
 
 .sh-gallery img:nth-child(2) {
@@ -1575,7 +1742,8 @@ h4 {
 }
 
 .sh-gallery.sh-gallery-manual img {
-  transition: opacity 0.8s ease !important;
+  animation: none !important;
+  transition: opacity 0.8s ease;
   z-index: 0;
 }
 
@@ -1884,12 +2052,17 @@ h4 {
   }
 
   .sh-footer-actions {
-    text-align: center;
-    align-items: center;
+    text-align: left;
+    align-items: flex-start;
+  }
+
+  .sh-footer-social-row,
+  .sh-footer-social {
+    justify-content: flex-start;
   }
 
   .sh-footer-credit-wrap {
-    text-align: center;
+    text-align: left;
     margin-top: 10px;
   }
 }
@@ -2534,6 +2707,25 @@ h4 {
   }
 }
 
+@media (max-width: 600px) {
+  .sh-modal-backdrop {
+    padding: 8px;
+  }
+
+  .sh-modal-header {
+    padding: 12px 14px;
+  }
+
+  .sh-modal-header h3 {
+    font-size: 1.1rem;
+  }
+
+  .sh-modal-body {
+    padding: 14px;
+    gap: 14px;
+  }
+}
+
 .sh-modal-body img {
   width: 100%;
   aspect-ratio: 16 / 9;
@@ -2580,11 +2772,12 @@ h4 {
   display: grid;
   grid-template-columns: minmax(280px, 1.1fr) minmax(240px, 0.9fr);
   gap: 24px;
+  margin: 8px 0 10px;
   align-items: stretch;
 }
 
 .sh-publication-overview-grid .sh-card-pad-lg {
-  padding: 12px;
+  padding: clamp(18px, 2vw, 24px);
 }
 
 .sh-publication-overview-grid > .sh-card {
@@ -2706,6 +2899,26 @@ h4 {
 @media (max-width: 900px) {
   .sh-publication-overview-grid {
     grid-template-columns: 1fr;
+  }
+
+  .sh-publications-overview {
+    padding-top: 16px;
+    padding-bottom: 20px;
+  }
+
+  .sh-publication-overview-grid {
+    margin: 6px 0 8px;
+  }
+}
+
+@media (max-width: 600px) {
+  .sh-publications-overview {
+    padding-top: 12px;
+    padding-bottom: 16px;
+  }
+
+  .sh-publication-overview-grid {
+    margin: 4px 0 6px;
   }
 }
 
@@ -2874,7 +3087,7 @@ h4 {
 
 #sh-publication-library {
   padding-top: 8px;
-  margin-top: -12px;
+  margin-top: 0;
 }
 
 .sh-publication-list {
@@ -2981,5 +3194,11 @@ h4 {
 @media (max-width: 640px) {
   .sh-publication-card {
     padding: 16px;
+  }
+
+  /* Left-align the journal name so it doesn't hang right on a wrapped row */
+  .sh-publication-journal {
+    margin-left: 0;
+    text-align: left;
   }
 }

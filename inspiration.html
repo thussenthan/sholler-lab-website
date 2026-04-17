@@ -122,14 +122,6 @@
     margin: 26px 0 0;
   }
 
-  /* Override: video placeholder starts fully visible; JS fades it out on play */
-  .sh-video-placeholder {
-    transition:
-      opacity 0.3s ease,
-      transform 0.3s ease;
-    opacity: 1;
-  }
-
   .sh-section-bottom-compact {
     padding-top: 0;
   }
@@ -312,6 +304,10 @@
     margin-top: 48px;
     margin-bottom: 48px;
     padding: 20px;
+    width: min(960px, 100%);
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
     border-radius: 18px;
     background: #edf2f7;
     border: 1px solid #d8e1eb;
@@ -395,6 +391,7 @@
   @media (max-width: 900px) {
     .sh-artpiece-feature-shell {
       padding: 14px;
+      width: min(948px, 100%);
       margin-bottom: 48px;
     }
 
@@ -408,11 +405,43 @@
       width: 100%;
       gap: 8px;
     }
+
+    .sh-inspiration-page .sh-art-row--cluster + .sh-art-row--cluster {
+      margin-top: 18px;
+    }
+
+    .sh-inspiration-page .sh-art-row--cluster .sh-art-text {
+      width: 100%;
+    }
+
+    .sh-inspiration-page .sh-art-row--cluster .sh-art-quote {
+      font-size: 1.08rem;
+      line-height: 1.52;
+    }
+
+    .sh-inspiration-page .sh-art-row--cluster .sh-art-note {
+      margin-top: 8px;
+      font-size: 0.96rem;
+      line-height: 1.58;
+    }
   }
 
   @media (pointer: coarse) {
     .sh-artpiece-video .sh-hover-cue {
       display: none;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .sh-inspiration-page .sh-art-row--cluster .sh-art-quote {
+      font-size: 1rem;
+      line-height: 1.45;
+    }
+
+    .sh-inspiration-page .sh-art-row--cluster .sh-art-note {
+      margin-top: 6px;
+      font-size: 0.9rem;
+      line-height: 1.5;
     }
   }
 </style>
@@ -592,15 +621,15 @@
     ></span>
   </div>
   <section
-    class="sh-section sh-section-top-compact sh-page-match-research-top sh-art-section"
+    class="sh-section sh-section-top-compact sh-page-match-research-top sh-art-section sh-page-intro"
   >
     <!-- dots are created via JS; fallback dots included below -->
 
     <div class="sh-container">
-      <div class="sh-art-header">
+      <div class="sh-page-intro-header sh-art-header">
         <p class="sh-eyebrow">Art &amp; inspiration</p>
-        <h2>Art in the Lab: <em>Reach for the Stars</em></h2>
-        <p>
+        <h1>Art in the Lab: <em>Reach for the Stars</em></h1>
+        <p class="sh-page-intro-copy">
           In our lab, a series of paintings by artist Joel Schoon-Tanis reflects
           how families, precision medicine, all the amazing new work being done
           in oncology, and a community of scientists come together to help
@@ -697,7 +726,7 @@
         <div class="sh-art-text">
           <div class="sh-art-text-inner">
             <p class="sh-art-quote">
-              It is important to note that the flourishing happens as a result
+              "It is important to note that the flourishing happens as a result
               of a community working together.”
             </p>
             <p class="sh-art-note">
@@ -778,7 +807,8 @@
                 >
               </button>
               <iframe
-                src="https://www.youtube.com/embed/jldDbWtC3cM?rel=0&amp;playsinline=1"
+                src="https://www.youtube.com/embed/jldDbWtC3cM?rel=0&amp;playsinline=1&amp;enablejsapi=1"
+                data-video-src="https://www.youtube.com/embed/jldDbWtC3cM?rel=0&amp;playsinline=1&amp;enablejsapi=1"
                 title="Welcome to the Sholler Lab"
                 allow="
                   accelerometer;
@@ -905,8 +935,117 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
+    const videoButtons = document.querySelectorAll("[data-video-play='true']");
     const artpieceVideo = document.querySelector(".sh-artpiece-video");
     const globeFeature = document.querySelector(".sh-feature-box--globe");
+    let youtubeApiPromise = null;
+
+    const buildAutoplayUrl = (url, muted) =>
+      url +
+      (url.indexOf("?") === -1 ? "?" : "&") +
+      "autoplay=1" +
+      (muted ? "&mute=1" : "");
+
+    const ensureYouTubeApi = () => {
+      if (window.YT && window.YT.Player) {
+        return Promise.resolve(window.YT);
+      }
+
+      if (youtubeApiPromise) {
+        return youtubeApiPromise;
+      }
+
+      youtubeApiPromise = new Promise((resolve) => {
+        const previousReady = window.onYouTubeIframeAPIReady;
+        window.onYouTubeIframeAPIReady = () => {
+          if (typeof previousReady === "function") {
+            previousReady();
+          }
+          resolve(window.YT);
+        };
+
+        if (
+          !document.querySelector(
+            'script[src="https://www.youtube.com/iframe_api"]',
+          )
+        ) {
+          const script = document.createElement("script");
+          script.src = "https://www.youtube.com/iframe_api";
+          document.head.appendChild(script);
+        }
+      });
+
+      return youtubeApiPromise;
+    };
+
+    const getYouTubePlayer = (iframe) => {
+      if (!iframe) {
+        return Promise.reject(new Error("Missing iframe"));
+      }
+
+      if (iframe._shPlayerPromise) {
+        return iframe._shPlayerPromise;
+      }
+
+      iframe._shPlayerPromise = ensureYouTubeApi().then(
+        (YT) =>
+          new Promise((resolve, reject) => {
+            let settled = false;
+            const timeout = window.setTimeout(() => {
+              if (settled) return;
+              settled = true;
+              reject(new Error("YouTube player timed out"));
+            }, 2500);
+
+            const player = new YT.Player(iframe, {
+              events: {
+                onReady: () => {
+                  if (settled) return;
+                  settled = true;
+                  window.clearTimeout(timeout);
+                  resolve(player);
+                },
+                onError: () => {
+                  if (settled) return;
+                  settled = true;
+                  window.clearTimeout(timeout);
+                  reject(new Error("YouTube player errored"));
+                },
+              },
+            });
+          }),
+      );
+
+      return iframe._shPlayerPromise;
+    };
+
+    ensureYouTubeApi();
+
+    videoButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        if (button.getAttribute("data-video-activated") === "true") return;
+        button.setAttribute("data-video-activated", "true");
+        button.classList.add("is-hidden");
+        const iframe = button.parentElement.querySelector("iframe");
+        const videoSrc = iframe && iframe.getAttribute("data-video-src");
+        if (iframe && videoSrc) {
+          const isPhone = window.matchMedia("(max-width: 600px)").matches;
+          getYouTubePlayer(iframe)
+            .then((player) => {
+              if (isPhone && typeof player.mute === "function") {
+                player.mute();
+              } else if (!isPhone && typeof player.unMute === "function") {
+                player.unMute();
+              }
+              player.playVideo();
+            })
+            .catch(() => {
+              iframe.src = buildAutoplayUrl(videoSrc, isPhone);
+            });
+        }
+      });
+    });
+
     if (
       artpieceVideo &&
       window.matchMedia("(pointer: fine)").matches &&

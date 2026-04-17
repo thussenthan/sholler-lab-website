@@ -1,5 +1,5 @@
 <!-- HERO -->
-<section class="sh-hero sh-home-hero sh-page-top">
+<section class="sh-hero sh-home-hero">
   <div class="sh-container">
     <div class="sh-hero-split sh-home-hero-split">
       <!-- LEFT: Text (about 40%) -->
@@ -35,7 +35,8 @@
               <span class="sr-only">Play Welcome to the Sholler Lab video</span>
             </button>
             <iframe
-              src="https://www.youtube.com/embed/jldDbWtC3cM?rel=0&amp;playsinline=1"
+              src="https://www.youtube.com/embed/jldDbWtC3cM?rel=0&amp;playsinline=1&amp;enablejsapi=1"
+              data-video-src="https://www.youtube.com/embed/jldDbWtC3cM?rel=0&amp;playsinline=1&amp;enablejsapi=1"
               title="Welcome to the Sholler Lab"
               allow="
                 accelerometer;
@@ -245,6 +246,139 @@
     </div>
   </div>
 </section>
+<script>
+  (function () {
+    /* Quad gallery swap */
+    var INTERVAL = 9000;
+    var STAGGER = 450;
+    var cells = document.querySelectorAll(".sh-gallery-manual");
+
+    function swapCell(cell) {
+      var imgs = cell.querySelectorAll("img");
+      if (imgs.length < 2) return;
+      var active = cell.querySelector("img.is-active");
+      var idx = active ? Array.prototype.indexOf.call(imgs, active) : 0;
+      for (var i = 0; i < imgs.length; i++) imgs[i].classList.remove("is-active");
+      imgs[(idx + 1) % imgs.length].classList.add("is-active");
+    }
+
+    for (var q = 0; q < cells.length; q++) {
+      (function (cell, delay) {
+        setTimeout(function () {
+          setInterval(function () { swapCell(cell); }, INTERVAL);
+        }, delay);
+      })(cells[q], q * STAGGER);
+    }
+
+    /* Hero video play */
+    var videoButtons = document.querySelectorAll("[data-video-play='true']");
+    var youtubeApiPromise = null;
+
+    function buildAutoplayUrl(url, muted) {
+      return (
+        url +
+        (url.indexOf("?") === -1 ? "?" : "&") +
+        "autoplay=1" +
+        (muted ? "&mute=1" : "")
+      );
+    }
+
+    function ensureYouTubeApi() {
+      if (window.YT && window.YT.Player) {
+        return Promise.resolve(window.YT);
+      }
+
+      if (youtubeApiPromise) {
+        return youtubeApiPromise;
+      }
+
+      youtubeApiPromise = new Promise(function (resolve) {
+        var previousReady = window.onYouTubeIframeAPIReady;
+        window.onYouTubeIframeAPIReady = function () {
+          if (typeof previousReady === "function") {
+            previousReady();
+          }
+          resolve(window.YT);
+        };
+
+        if (!document.querySelector('script[src="https://www.youtube.com/iframe_api"]')) {
+          var script = document.createElement("script");
+          script.src = "https://www.youtube.com/iframe_api";
+          document.head.appendChild(script);
+        }
+      });
+
+      return youtubeApiPromise;
+    }
+
+    function getYouTubePlayer(iframe) {
+      if (!iframe) {
+        return Promise.reject(new Error("Missing iframe"));
+      }
+
+      if (iframe._shPlayerPromise) {
+        return iframe._shPlayerPromise;
+      }
+
+      iframe._shPlayerPromise = ensureYouTubeApi().then(function (YT) {
+        return new Promise(function (resolve, reject) {
+          var settled = false;
+          var timeout = window.setTimeout(function () {
+            if (settled) return;
+            settled = true;
+            reject(new Error("YouTube player timed out"));
+          }, 2500);
+
+          var player = new YT.Player(iframe, {
+            events: {
+              onReady: function () {
+                if (settled) return;
+                settled = true;
+                window.clearTimeout(timeout);
+                resolve(player);
+              },
+              onError: function () {
+                if (settled) return;
+                settled = true;
+                window.clearTimeout(timeout);
+                reject(new Error("YouTube player errored"));
+              },
+            },
+          });
+        });
+      });
+
+      return iframe._shPlayerPromise;
+    }
+
+    ensureYouTubeApi();
+
+    for (var i = 0; i < videoButtons.length; i += 1) {
+      videoButtons[i].addEventListener("click", function () {
+        if (this.getAttribute("data-video-activated") === "true") return;
+        this.setAttribute("data-video-activated", "true");
+        this.classList.add("is-hidden");
+        var iframe = this.parentElement.querySelector("iframe");
+        var videoSrc = iframe && iframe.getAttribute("data-video-src");
+        if (iframe && videoSrc) {
+          var isPhone = window.matchMedia("(max-width: 600px)").matches;
+          getYouTubePlayer(iframe)
+            .then(function (player) {
+              if (isPhone && typeof player.mute === "function") {
+                player.mute();
+              } else if (!isPhone && typeof player.unMute === "function") {
+                player.unMute();
+              }
+              player.playVideo();
+            })
+            .catch(function () {
+              iframe.src = buildAutoplayUrl(videoSrc, isPhone);
+            });
+        }
+      });
+    }
+  })();
+</script>
 
 <!-- HOW OUR RESEARCH REACHES PATIENTS (2x2 tiles) -->
 <section class="sh-section sh-section-top-compact">
@@ -256,7 +390,7 @@
       expanding options at recurrence, and creating new ways to match therapies
       to each child&rsquo;s tumor.
     </p>
-    <div class="sh-grid sh-grid-2 sh-mt-28">
+    <div class="sh-grid sh-grid-2 sh-mt-18">
       <div class="sh-card">
         <h3>Lowering Relapse Risk in High-Risk Neuroblastoma</h3>
         <p>
@@ -298,12 +432,12 @@
 </section>
 
 <!-- PEOPLE TEASER + AUTO CROSSFADE GALLERY -->
-<section class="sh-section sh-bg-soft sh-mt-36">
+<section class="sh-section sh-bg-soft sh-mt-36 sh-home-team-section">
   <div class="sh-container sh-people">
     <div>
       <p class="sh-eyebrow">Lab community</p>
       <h2>Our Team</h2>
-      <p>
+      <p class="sh-home-team-copy">
         Our laboratory includes scientists, trainees, and technologists who
         develop preclinical evidence to support future clinical trials in rare
         pediatric solid tumors.
@@ -314,7 +448,7 @@
     </div>
     <div>
       <div class="sh-gallery-wrap">
-        <div class="sh-gallery" aria-label="Lab photo gallery">
+        <div class="sh-gallery sh-home-team-gallery" aria-label="Lab photo gallery">
           <img
             src="https://sites.psu.edu/shollerlab/files/2025/11/CHI_DN_112125_ped-research-day200.jpg"
             alt="Lab photo 1"
@@ -365,7 +499,7 @@
   <div class="sh-container">
     <p class="sh-eyebrow">Join our lab</p>
     <h2>Open Positions</h2>
-    <div class="sh-grid sh-mt-12">
+    <div class="sh-grid sh-mt-18">
       <!-- (Left) Card -->
       <div class="sh-card">
         <h3>Research Technologist &ndash; Pediatrics</h3>
@@ -443,7 +577,7 @@
       oncology. All collaborations are welcome&mdash;let&rsquo;s build what you
       need.
     </p>
-    <div class="sh-grid sh-grid-2 sh-mt-16">
+    <div class="sh-grid sh-grid-2 sh-mt-18">
       <div class="sh-card">
         <h3>mRNA Vaccine Design &amp; Production</h3>
         <p>
@@ -493,7 +627,7 @@
 
 <!-- FUNDING &amp; ACKNOWLEDGMENTS -->
 <section
-  class="sh-section sh-section-top-compact sh-mt-36 sh-page-match-research-bottom"
+  class="sh-section sh-section-top-compact sh-mt-36 sh-page-match-research-bottom sh-section-eyebrow-gap"
 >
   <div class="sh-container">
     <div class="sh-funding-header">

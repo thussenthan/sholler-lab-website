@@ -1,8 +1,8 @@
 <style>
   .sh-site-header {
     --sh-header-pad: 18px;
-    --sh-nav-height: 33px;
-    --sh-nav-height-compact: 31px;
+    --sh-nav-height: 40px;
+    --sh-nav-height-compact: 37px;
     --sh-control-size: 30px;
     --sh-control-size-compact: 28px;
     --sh-header-navy: var(--nittany-navy, #001e44);
@@ -17,14 +17,14 @@
     --sh-header-nav-shadow: rgba(0, 30, 68, 0.08);
     position: fixed;
     top: 0;
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
+    left: 0;
+    right: 0;
+    transform: none;
     z-index: 200;
     isolation: isolate;
     display: block;
-    width: min(1100px, 90%);
-    max-width: min(1100px, 90%);
+    width: 100%;
+    max-width: 100%;
     overflow: visible;
     margin: 0;
     padding: 0;
@@ -109,7 +109,34 @@
     right: auto;
     transform: none;
     width: 100%;
-    max-width: none;
+    max-width: 100%;
+  }
+
+  @media (max-width: 980px) {
+    html {
+      scroll-padding-top: 24px;
+      margin-top: 0 !important;
+    }
+
+    body {
+      padding-top: 0 !important;
+      margin-top: 0 !important;
+    }
+
+    body:not(.et-fb) #wpadminbar {
+      display: none !important;
+    }
+
+    .sh-site-header {
+      position: relative;
+      top: auto !important;
+      left: auto;
+      right: auto;
+    }
+
+    .sh-header-top {
+      box-shadow: 0 12px 26px var(--sh-header-shadow);
+    }
   }
 
   .sh-header-top {
@@ -312,7 +339,7 @@
     color: var(--sh-header-navy);
     text-decoration: none;
     font-weight: 700;
-    font-size: 0.88rem;
+    font-size: 0.92rem;
     letter-spacing: 0.03em;
     text-transform: uppercase;
     border-bottom: 2px solid transparent;
@@ -412,7 +439,7 @@
   }
 
   .sh-site-header.is-scrolled .sh-nav-list a {
-    font-size: 0.84rem;
+    font-size: 0.88rem;
     padding: 0 10px;
   }
 
@@ -596,6 +623,11 @@
       border-color 0.2s ease;
   }
 
+  .sh-site-header .sh-nav-hamburger svg {
+    width: 18px;
+    height: 18px;
+  }
+
   .sh-site-header .sh-nav-hamburger:hover,
   .sh-site-header .sh-nav-hamburger:focus-visible {
     background: #f0f0f0;
@@ -659,11 +691,22 @@
 
     .sh-site-header .sh-header-nav .sh-header-inner {
       min-height: var(--sh-nav-height);
-      justify-content: space-between;
+      height: auto;
+      justify-content: flex-end;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding-top: 8px;
+      padding-bottom: 8px;
     }
 
     .sh-site-header .sh-nav-hamburger {
       display: flex;
+      order: 2;
+    }
+
+    .sh-site-header .sh-nav-actions {
+      order: 1;
     }
 
     .sh-site-header .sh-header-nav {
@@ -672,16 +715,19 @@
 
     .sh-site-header .sh-nav-list {
       display: none;
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
+      flex: 0 0 100%;
+      order: 3;
+      position: static;
+      width: 100%;
+      height: auto;
+      min-height: 0;
+      align-items: stretch;
       flex-direction: column;
       background: rgba(255, 255, 255, 0.98);
-      box-shadow: 0 18px 30px rgba(0, 30, 68, 0.16);
+      box-shadow: none;
       border-top: 1px solid rgba(0, 30, 68, 0.08);
-      padding: 10px 0;
-      z-index: 100;
+      padding: 10px 0 !important;
+      margin: 6px 0 0 !important;
       gap: 0;
     }
 
@@ -691,6 +737,7 @@
 
     .sh-site-header .sh-nav-list li {
       width: 100%;
+      height: auto;
     }
 
     .sh-site-header .sh-nav-list a {
@@ -721,12 +768,17 @@
       --sh-header-pad: 12px;
       --sh-nav-height: 40px;
       --sh-nav-height-compact: 40px;
-      --sh-control-size: 32px;
-      --sh-control-size-compact: 32px;
+      --sh-control-size: 30px;
+      --sh-control-size-compact: 30px;
     }
 
     .sh-header-top .sh-header-inner {
       gap: 16px;
+    }
+
+    .sh-site-header .sh-nav-hamburger svg {
+      width: 17px;
+      height: 17px;
     }
 
     .sh-brand {
@@ -836,7 +888,7 @@
       <ul class="sh-nav-list" id="sh-nav-menu">
         <li><a href="home">Home</a></li>
         <li><a href="research">Research</a></li>
-        <li><a href="our-team">Our Team</a></li>
+        <li><a href="people">People</a></li>
         <li><a href="inspiration">Inspiration</a></li>
         <li><a href="publications">Publications</a></li>
         <li><a href="contact">Contact</a></li>
@@ -982,8 +1034,14 @@
     var hamburger = navBar.querySelector(".sh-nav-hamburger");
     var navMenu = navBar.querySelector("#sh-nav-menu");
     var mobileMenuMedia = window.matchMedia("(max-width: 768px)");
+    var nonPersistentHeaderMedia = window.matchMedia("(max-width: 980px)");
 
     function updateHeaderScrollState() {
+      if (nonPersistentHeaderMedia && nonPersistentHeaderMedia.matches) {
+        header.classList.remove("is-scrolled");
+        return;
+      }
+
       if (window.scrollY > 6) {
         header.classList.add("is-scrolled");
       } else {
@@ -1005,12 +1063,15 @@
         return;
       }
 
-      var offset = header.offsetHeight || 0;
-      var adminBarOffset = document.body.classList.contains("admin-bar")
-        ? window.innerWidth <= 782
-          ? 46
-          : 32
-        : 0;
+      var useNonPersistentHeader =
+        nonPersistentHeaderMedia && nonPersistentHeaderMedia.matches;
+      var offset = useNonPersistentHeader ? 0 : header.offsetHeight || 0;
+      var adminBarOffset =
+        !useNonPersistentHeader && document.body.classList.contains("admin-bar")
+          ? window.innerWidth <= 782
+            ? 46
+            : 32
+          : 0;
 
       document.documentElement.style.setProperty(
         "--sh-fixed-header-offset",
@@ -1020,7 +1081,12 @@
         "--sh-admin-bar-offset",
         adminBarOffset + "px",
       );
-      header.style.top = adminBarOffset + "px";
+
+      if (useNonPersistentHeader) {
+        header.style.removeProperty("top");
+      } else {
+        header.style.top = adminBarOffset + "px";
+      }
     }
 
     updateHeaderScrollState();
@@ -1158,6 +1224,23 @@
       }
     }
 
+    if (nonPersistentHeaderMedia && nonPersistentHeaderMedia.addEventListener) {
+      nonPersistentHeaderMedia.addEventListener("change", function () {
+        updateHeaderScrollState();
+        updateHeaderOffset();
+      });
+    }
+
     window.setTimeout(updateHeaderOffset, 60);
+
+    /* Fallback for browsers without :has() support. */
+    document.addEventListener("DOMContentLoaded", function () {
+      var hero = document.querySelector(".sh-home-hero");
+      if (!hero) return;
+      for (var el = hero.parentElement; el && el !== document.body; el = el.parentElement) {
+        el.style.setProperty("padding-top", "0", "important");
+        el.style.setProperty("margin-top", "0", "important");
+      }
+    });
   })();
 </script>
