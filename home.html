@@ -258,14 +258,17 @@
       if (imgs.length < 2) return;
       var active = cell.querySelector("img.is-active");
       var idx = active ? Array.prototype.indexOf.call(imgs, active) : 0;
-      for (var i = 0; i < imgs.length; i++) imgs[i].classList.remove("is-active");
+      for (var i = 0; i < imgs.length; i++)
+        imgs[i].classList.remove("is-active");
       imgs[(idx + 1) % imgs.length].classList.add("is-active");
     }
 
     for (var q = 0; q < cells.length; q++) {
       (function (cell, delay) {
         setTimeout(function () {
-          setInterval(function () { swapCell(cell); }, INTERVAL);
+          setInterval(function () {
+            swapCell(cell);
+          }, INTERVAL);
         }, delay);
       })(cells[q], q * STAGGER);
     }
@@ -301,7 +304,11 @@
           resolve(window.YT);
         };
 
-        if (!document.querySelector('script[src="https://www.youtube.com/iframe_api"]')) {
+        if (
+          !document.querySelector(
+            'script[src="https://www.youtube.com/iframe_api"]',
+          )
+        ) {
           var script = document.createElement("script");
           script.src = "https://www.youtube.com/iframe_api";
           document.head.appendChild(script);
@@ -448,7 +455,10 @@
     </div>
     <div>
       <div class="sh-gallery-wrap">
-        <div class="sh-gallery sh-home-team-gallery" aria-label="Lab photo gallery">
+        <div
+          class="sh-gallery sh-home-team-gallery"
+          aria-label="Lab photo gallery"
+        >
           <img
             src="https://sites.psu.edu/shollerlab/files/2025/11/CHI_DN_112125_ped-research-day200.jpg"
             alt="Lab photo 1"

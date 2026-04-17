@@ -1237,7 +1237,11 @@
     document.addEventListener("DOMContentLoaded", function () {
       var hero = document.querySelector(".sh-home-hero");
       if (!hero) return;
-      for (var el = hero.parentElement; el && el !== document.body; el = el.parentElement) {
+      for (
+        var el = hero.parentElement;
+        el && el !== document.body;
+        el = el.parentElement
+      ) {
         el.style.setProperty("padding-top", "0", "important");
         el.style.setProperty("margin-top", "0", "important");
       }
