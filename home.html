@@ -276,6 +276,9 @@
     /* Hero video play */
     var videoButtons = document.querySelectorAll("[data-video-play='true']");
     var youtubeApiPromise = null;
+    var shouldWarmYouTubeApi =
+      window.matchMedia("(pointer: coarse)").matches ||
+      window.matchMedia("(hover: none)").matches;
 
     function buildAutoplayUrl(url, muted) {
       return (
@@ -358,7 +361,36 @@
       return iframe._shPlayerPromise;
     }
 
-    ensureYouTubeApi();
+    function sendYouTubeCommand(iframe, func) {
+      if (!iframe || !iframe.contentWindow) return;
+      iframe.contentWindow.postMessage(
+        JSON.stringify({
+          event: "command",
+          func: func,
+          args: [],
+        }),
+        "*",
+      );
+    }
+
+    function playDesktopVideoFast(iframe) {
+      sendYouTubeCommand(iframe, "unMute");
+      sendYouTubeCommand(iframe, "playVideo");
+
+      window.setTimeout(function () {
+        sendYouTubeCommand(iframe, "unMute");
+        sendYouTubeCommand(iframe, "playVideo");
+      }, 120);
+
+      window.setTimeout(function () {
+        sendYouTubeCommand(iframe, "unMute");
+        sendYouTubeCommand(iframe, "playVideo");
+      }, 260);
+    }
+
+    if (shouldWarmYouTubeApi) {
+      ensureYouTubeApi();
+    }
 
     for (var i = 0; i < videoButtons.length; i += 1) {
       videoButtons[i].addEventListener("click", function () {
@@ -369,6 +401,10 @@
         var videoSrc = iframe && iframe.getAttribute("data-video-src");
         if (iframe && videoSrc) {
           var isPhone = window.matchMedia("(max-width: 600px)").matches;
+          if (!isPhone) {
+            playDesktopVideoFast(iframe);
+            return;
+          }
           getYouTubePlayer(iframe)
             .then(function (player) {
               if (isPhone && typeof player.mute === "function") {

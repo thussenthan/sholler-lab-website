@@ -163,7 +163,7 @@
     inset: 0;
     background: radial-gradient(
       460px circle at var(--mx) var(--my),
-      rgba(255, 255, 255, 0.18),
+      rgba(255, 255, 255, 0.13),
       rgba(255, 255, 255, 0) 60%
     );
     opacity: var(--glow-opacity);
@@ -174,7 +174,7 @@
   .sh-feature-box--globe.is-pointer-active,
   .sh-feature-box--globe:focus-within {
     --lift-y: -3px;
-    --glow-opacity: 0.84;
+    --glow-opacity: 0.6;
     box-shadow: 0 20px 42px rgba(0, 30, 68, 0.34);
     filter: saturate(1.02);
   }
@@ -251,10 +251,6 @@
     border: 0;
   }
 
-  .sh-feature-box--globe .sh-btn-primary:hover {
-    filter: brightness(0.96);
-  }
-
   .sh-feature-box h3 {
     margin: 0 0 8px;
   }
@@ -268,14 +264,16 @@
     align-items: center;
     gap: 8px;
     transition:
+      filter 0.22s ease,
       transform 0.22s ease,
       box-shadow 0.22s ease;
   }
 
-  .sh-feature-box--globe:hover .sh-feature-actions .sh-btn,
-  .sh-feature-box--globe:focus-within .sh-feature-actions .sh-btn {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(0, 30, 68, 0.24);
+  .sh-feature-box--globe .sh-feature-actions .sh-btn:hover,
+  .sh-feature-box--globe .sh-feature-actions .sh-btn:focus-visible {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 26px rgba(0, 30, 68, 0.24);
+    filter: brightness(0.96);
   }
 
   .sh-icon {
@@ -939,6 +937,9 @@
     const artpieceVideo = document.querySelector(".sh-artpiece-video");
     const globeFeature = document.querySelector(".sh-feature-box--globe");
     let youtubeApiPromise = null;
+    const shouldWarmYouTubeApi =
+      window.matchMedia("(pointer: coarse)").matches ||
+      window.matchMedia("(hover: none)").matches;
 
     const buildAutoplayUrl = (url, muted) =>
       url +
@@ -1019,7 +1020,36 @@
       return iframe._shPlayerPromise;
     };
 
-    ensureYouTubeApi();
+    const sendYouTubeCommand = (iframe, func) => {
+      if (!iframe || !iframe.contentWindow) return;
+      iframe.contentWindow.postMessage(
+        JSON.stringify({
+          event: "command",
+          func,
+          args: [],
+        }),
+        "*",
+      );
+    };
+
+    const playDesktopVideoFast = (iframe) => {
+      sendYouTubeCommand(iframe, "unMute");
+      sendYouTubeCommand(iframe, "playVideo");
+
+      window.setTimeout(() => {
+        sendYouTubeCommand(iframe, "unMute");
+        sendYouTubeCommand(iframe, "playVideo");
+      }, 120);
+
+      window.setTimeout(() => {
+        sendYouTubeCommand(iframe, "unMute");
+        sendYouTubeCommand(iframe, "playVideo");
+      }, 260);
+    };
+
+    if (shouldWarmYouTubeApi) {
+      ensureYouTubeApi();
+    }
 
     videoButtons.forEach((button) => {
       button.addEventListener("click", () => {
@@ -1030,6 +1060,10 @@
         const videoSrc = iframe && iframe.getAttribute("data-video-src");
         if (iframe && videoSrc) {
           const isPhone = window.matchMedia("(max-width: 600px)").matches;
+          if (!isPhone) {
+            playDesktopVideoFast(iframe);
+            return;
+          }
           getYouTubePlayer(iframe)
             .then((player) => {
               if (isPhone && typeof player.mute === "function") {
