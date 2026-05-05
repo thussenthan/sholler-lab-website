@@ -36,9 +36,21 @@
 
   .research-page .sh-project-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 22px;
     margin-top: 18px;
+  }
+
+  @media (max-width: 900px) {
+    .research-page .sh-project-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 600px) {
+    .research-page .sh-project-grid {
+      grid-template-columns: 1fr;
+    }
   }
 
   .research-page .sh-project-card {
@@ -299,7 +311,7 @@
 
   .sh-modal-header h3 {
     margin: 0;
-    font-size: 1.3rem;
+    font-size: 1.45rem;
     overflow-wrap: anywhere;
     color: #f5f8ff;
   }
@@ -307,10 +319,13 @@
   .sh-modal-close {
     background: transparent;
     border: 0;
+    padding: 0;
     color: #f5f8ff;
     font-size: 1.7rem;
     cursor: pointer;
     line-height: 1;
+    display: flex;
+    align-items: center;
   }
 
   .sh-modal-body {
@@ -325,7 +340,7 @@
     justify-items: start;
   }
 
-  @media (max-width: 880px) {
+  @media (max-width: 800px) {
     .sh-modal-body {
       grid-template-columns: 1fr;
     }
@@ -347,7 +362,7 @@
     }
 
     .sh-modal-header h3 {
-      font-size: 1.1rem;
+      font-size: 1.2rem;
     }
 
     .sh-modal-body {

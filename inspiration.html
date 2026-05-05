@@ -871,7 +871,7 @@
         <h3>Boston Globe feature: "The Power of Will"</h3>
         <p>
           If you would like to learn more about our work and its impact, read
-          the Boston Globe story about Dr. Sholler and our team.
+          the story about Dr. Sholler and our team in The Boston Globe.
         </p>
         <div class="sh-feature-actions">
           <a
@@ -1124,43 +1124,120 @@
       window.matchMedia("(pointer: fine)").matches &&
       !window.matchMedia("(prefers-reduced-motion: reduce)").matches
     ) {
+      const globeButton = globeFeature.querySelector(
+        ".sh-feature-actions .sh-btn",
+      );
       const maxTilt = 6;
       const maxShift = 4;
       const ease = 0.16;
-      let targetX = 50;
-      let targetY = 50;
-      let currentX = 50;
-      let currentY = 50;
+      let motionOriginX = 50;
+      let motionOriginY = 50;
+      let motionTargetX = 50;
+      let motionTargetY = 50;
+      let motionCurrentX = 50;
+      let motionCurrentY = 50;
+      let glowTargetX = 50;
+      let glowTargetY = 50;
+      let glowCurrentX = 50;
+      let glowCurrentY = 50;
       let rafId = null;
       let isActive = false;
+
+      const getButtonCenter = () => {
+        if (!globeButton) {
+          return { x: 50, y: 50 };
+        }
+
+        const featureRect = globeFeature.getBoundingClientRect();
+        const buttonRect = globeButton.getBoundingClientRect();
+
+        return {
+          x: Math.max(
+            0,
+            Math.min(
+              100,
+              ((buttonRect.left + buttonRect.width / 2 - featureRect.left) /
+                featureRect.width) *
+                100,
+            ),
+          ),
+          y: Math.max(
+            0,
+            Math.min(
+              100,
+              ((buttonRect.top + buttonRect.height / 2 - featureRect.top) /
+                featureRect.height) *
+                100,
+            ),
+          ),
+        };
+      };
+
+      const setRestPoint = (syncCurrent = false) => {
+        const buttonCenter = getButtonCenter();
+        motionOriginX = buttonCenter.x;
+        motionOriginY = buttonCenter.y;
+        motionTargetX = buttonCenter.x;
+        motionTargetY = buttonCenter.y;
+        glowTargetX = buttonCenter.x;
+        glowTargetY = buttonCenter.y;
+
+        if (syncCurrent) {
+          motionCurrentX = buttonCenter.x;
+          motionCurrentY = buttonCenter.y;
+          glowCurrentX = buttonCenter.x;
+          glowCurrentY = buttonCenter.y;
+        }
+      };
 
       const setTargetFromPoint = (x, y, width, height) => {
         const px = Math.max(0, Math.min(100, (x / width) * 100));
         const py = Math.max(0, Math.min(100, (y / height) * 100));
 
-        targetX = px;
-        targetY = py;
+        motionTargetX = px;
+        motionTargetY = py;
+        glowTargetX = px;
+        glowTargetY = py;
       };
 
       const renderGlobeMotion = () => {
-        currentX += (targetX - currentX) * ease;
-        currentY += (targetY - currentY) * ease;
+        motionCurrentX += (motionTargetX - motionCurrentX) * ease;
+        motionCurrentY += (motionTargetY - motionCurrentY) * ease;
+        glowCurrentX += (glowTargetX - glowCurrentX) * ease;
+        glowCurrentY += (glowTargetY - glowCurrentY) * ease;
 
-        const tiltX = ((50 - currentY) / 50) * maxTilt;
-        const tiltY = ((currentX - 50) / 50) * maxTilt;
-        const shiftX = ((currentX - 50) / 50) * maxShift;
-        const shiftY = ((currentY - 50) / 50) * maxShift;
+        const normalizedX = Math.max(
+          -1,
+          Math.min(1, (motionCurrentX - motionOriginX) / 50),
+        );
+        const normalizedY = Math.max(
+          -1,
+          Math.min(1, (motionCurrentY - motionOriginY) / 50),
+        );
+        const tiltX = -normalizedY * maxTilt;
+        const tiltY = normalizedX * maxTilt;
+        const shiftX = normalizedX * maxShift;
+        const shiftY = normalizedY * maxShift;
 
-        globeFeature.style.setProperty("--mx", currentX.toFixed(2) + "%");
-        globeFeature.style.setProperty("--my", currentY.toFixed(2) + "%");
+        globeFeature.style.setProperty("--mx", glowCurrentX.toFixed(2) + "%");
+        globeFeature.style.setProperty("--my", glowCurrentY.toFixed(2) + "%");
         globeFeature.style.setProperty("--tilt-x", tiltX.toFixed(2) + "deg");
         globeFeature.style.setProperty("--tilt-y", tiltY.toFixed(2) + "deg");
         globeFeature.style.setProperty("--shift-x", shiftX.toFixed(2) + "px");
         globeFeature.style.setProperty("--shift-y", shiftY.toFixed(2) + "px");
 
-        const settleX = Math.abs(targetX - currentX) < 0.03;
-        const settleY = Math.abs(targetY - currentY) < 0.03;
-        if (isActive || !settleX || !settleY) {
+        const motionSettledX = Math.abs(motionTargetX - motionCurrentX) < 0.03;
+        const motionSettledY = Math.abs(motionTargetY - motionCurrentY) < 0.03;
+        const glowSettledX = Math.abs(glowTargetX - glowCurrentX) < 0.03;
+        const glowSettledY = Math.abs(glowTargetY - glowCurrentY) < 0.03;
+
+        if (
+          isActive ||
+          !motionSettledX ||
+          !motionSettledY ||
+          !glowSettledX ||
+          !glowSettledY
+        ) {
           rafId = window.requestAnimationFrame(renderGlobeMotion);
         } else {
           rafId = null;
@@ -1172,6 +1249,10 @@
           rafId = window.requestAnimationFrame(renderGlobeMotion);
         }
       };
+
+      setRestPoint(true);
+      globeFeature.style.setProperty("--mx", glowCurrentX.toFixed(2) + "%");
+      globeFeature.style.setProperty("--my", glowCurrentY.toFixed(2) + "%");
 
       globeFeature.addEventListener("pointerenter", (event) => {
         isActive = true;
@@ -1200,9 +1281,15 @@
       globeFeature.addEventListener("pointerleave", () => {
         isActive = false;
         globeFeature.classList.remove("is-pointer-active");
-        targetX = 50;
-        targetY = 50;
+        setRestPoint();
         ensureAnimation();
+      });
+
+      window.addEventListener("resize", () => {
+        if (isActive) return;
+        setRestPoint(true);
+        globeFeature.style.setProperty("--mx", glowCurrentX.toFixed(2) + "%");
+        globeFeature.style.setProperty("--my", glowCurrentY.toFixed(2) + "%");
       });
     }
 
