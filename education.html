@@ -1,0 +1,777 @@
+<style>
+  .education-page {
+    color: #121418;
+  }
+  .education-page .sh-page-intro-copy {
+    color: #36475f;
+    width: 100%;
+  }
+  .education-page .education-hero-panel::before {
+    content: "";
+    display: block;
+    width: 92px;
+    height: 3px;
+    margin: 0 0 24px;
+    background: #1e5db5;
+    border-radius: 999px;
+  }
+  .education-page .education-hero-panel {
+    margin: 24px 0 0;
+    padding: 38px 36px 34px;
+    border-radius: 16px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #001e44 0%, #1e407c 100%);
+    box-shadow: 0 18px 44px rgba(0, 30, 68, 0.2);
+  }
+  .education-page .education-hero-inner {
+    padding: 0;
+  }
+  .education-page .education-hero-panel h2,
+  .education-page .education-hero-panel p {
+    color: #ffffff;
+  }
+  .education-page .education-hero-panel h2 {
+    margin: 0 0 18px;
+    font-size: clamp(1.55rem, 2.1vw, 2.15rem);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: 0;
+    text-align: left;
+  }
+  .education-page .education-hero-copy {
+    margin: 0;
+    color: #f4f8ff;
+    font-size: clamp(1rem, 1.15vw, 1.08rem);
+    line-height: 1.6;
+    text-align: left;
+  }
+  .education-page .sh-gallery-wrap {
+    position: relative;
+    min-width: 0;
+    margin-top: 18px;
+  }
+  .education-page .sh-gallery {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    min-height: 260px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 12px 28px rgba(0, 30, 68, 0.12);
+  }
+  .education-page .sh-gallery img {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    animation: none;
+    transition: opacity 0.9s ease-in-out;
+    will-change: opacity;
+  }
+  .education-page .sh-gallery img.is-active {
+    opacity: 1;
+    z-index: 1;
+  }
+  .education-page .education-photo-row {
+    display: none;
+  }
+  .education-page .education-photo-row img,
+  .education-page .education-photo-gallery img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 12px 28px rgba(0, 30, 68, 0.12);
+  }
+  .education-page .education-photo-gallery {
+    display: flex;
+    gap: 12px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+  }
+  .education-page .education-photo-gallery figure {
+    flex: 1 1 calc(33.333% - 8px);
+    margin: 0;
+  }
+  .education-page .education-card {
+    background: #ffffff;
+    border: 1px solid rgba(0, 30, 68, 0.1);
+    border-radius: 14px;
+    box-shadow: 0 10px 24px rgba(0, 30, 68, 0.08);
+    overflow: hidden;
+  }
+  .education-page .education-scholar-card {
+    margin-top: 24px;
+    border-top: 10px solid #1e5db5;
+    box-shadow: 0 16px 38px rgba(30, 93, 181, 0.14);
+  }
+  .education-page .education-card-header {
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr);
+    column-gap: 12px;
+    align-items: center;
+    padding: 22px 24px 20px;
+  }
+  .education-page .education-card-title {
+    min-width: 0;
+  }
+  .education-page .education-stage-number {
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 34px;
+    color: #ffffff;
+    font-weight: 900;
+    line-height: 1;
+  }
+  .education-page .education-stage-red {
+    background: #c81e4a;
+  }
+  .education-page .education-stage-purple {
+    background: #5b2a86;
+  }
+  .education-page .education-stage-teal {
+    background: #02768f;
+  }
+  .education-page .education-stage-blue {
+    background: #1e5db5;
+  }
+  .education-page .education-stage-orange {
+    background: #ef7b18;
+  }
+  .education-page .education-card h3 {
+    margin: 0 !important;
+    padding: 0 !important;
+    color: #001e44;
+    line-height: 1.18 !important;
+  }
+  .education-page .education-card-title h3 {
+    display: flex !important;
+    align-items: center !important;
+    min-width: 0;
+    min-height: 34px !important;
+  }
+  .education-page .education-scholar-card h3 {
+    font-size: clamp(1.22rem, 1.75vw, 1.55rem);
+  }
+  .education-page .education-card-intro {
+    margin: 0 0 22px;
+    padding: 0 22px 12px;
+    color: #4f5a6a;
+    line-height: 1.75;
+    font-size: 1.02rem;
+    width: 100%;
+  }
+  .education-page .education-list {
+    list-style: none;
+    margin: 0;
+    padding: 0 22px 22px;
+  }
+  .education-page .education-list li {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin: 0;
+    padding: 18px 0;
+    border-top: 1px solid rgba(0, 30, 68, 0.09);
+  }
+  .education-page .education-list li > div {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .education-page .education-list i {
+    width: 24px;
+    flex: 0 0 24px;
+    text-align: center;
+    line-height: 1.5;
+  }
+  .education-page .education-list strong {
+    display: block;
+    color: #001e44;
+    line-height: 1.25;
+  }
+  .education-page .education-list span {
+    display: block;
+    margin-top: 2px;
+    color: #4f5a6a;
+    line-height: 1.4;
+  }
+  .education-page .education-scholar-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 26px;
+  }
+  .education-page .education-scholar-list li {
+    flex: 1 1 360px;
+  }
+  .education-page .education-scholar-list i {
+    color: #c81e4a;
+  }
+  .education-page .education-item1 .education-list i {
+    color: #1e5db5;
+  }
+  .education-page .education-note {
+    margin: 0 22px 28px;
+    padding: 22px;
+    border-radius: 12px;
+    background: #fff5f8;
+    border: 1px solid rgba(200, 30, 74, 0.18);
+  }
+  .education-page .education-item1 .education-note {
+    background: #eaf4ff;
+    border-color: rgba(30, 93, 181, 0.18);
+  }
+  .education-page .education-note p {
+    margin: 0;
+    color: #001e44;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+  .education-page .education-mission-band {
+    margin-top: 24px;
+    padding: 20px 22px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #f4f8ff, #ffffff);
+    border: 1px solid rgba(0, 30, 68, 0.14);
+    box-shadow: 0 10px 28px rgba(0, 30, 68, 0.08);
+    text-align: center;
+  }
+  .education-page .education-mission-band:last-child {
+    margin-bottom: 0;
+  }
+  .education-page .education-mission-band p {
+    margin: 0;
+    color: #001e44;
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    font-weight: 700;
+    line-height: 1.55;
+  }
+  .education-page .education-secondary-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 24px;
+    margin-top: 24px;
+    align-items: stretch;
+  }
+  .education-page .education-secondary-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    height: 100%;
+    border-top-width: 8px;
+  }
+  .education-page .education-secondary-card h3 {
+    font-size: 1.1rem;
+  }
+  .education-page .education-secondary-card .education-card-header {
+    padding: 16px 18px 16px;
+  }
+  .education-page .education-secondary-card .education-list {
+    padding: 0 18px 18px;
+  }
+  .education-page .education-secondary-card .education-list li {
+    gap: 10px;
+    padding: 11px 0;
+  }
+  .education-page .education-secondary-card .education-list strong {
+    font-size: 0.96rem;
+  }
+  .education-page .education-secondary-card .education-list span {
+    font-size: 0.92rem;
+    line-height: 1.38;
+  }
+  .education-page .education-secondary-card .education-list i {
+    font-size: 0.95rem;
+  }
+  .education-page .education-purple {
+    border-top-color: #5b2a86;
+  }
+  .education-page .education-purple i {
+    color: #5b2a86;
+  }
+  .education-page .education-teal {
+    border-top-color: #02768f;
+  }
+  .education-page .education-teal i {
+    color: #02768f;
+  }
+  .education-page .education-blue {
+    border-top-color: #1e5db5;
+  }
+  .education-page .education-blue i {
+    color: #1e5db5;
+  }
+  .education-page .education-orange {
+    border-top-color: #ef7b18;
+  }
+  .education-page .education-orange i {
+    color: #ef7b18;
+  }
+  .education-page .education-red {
+    border-top-color: #c81e4a;
+  }
+  .education-page .education-red i {
+    color: #c81e4a;
+  }
+  .education-page .education-experience-grid {
+    align-items: stretch;
+    margin-top: 24px;
+  }
+  .education-page .education-experience-card {
+    height: 100%;
+  }
+  .education-page .education-experience-card h3 {
+    margin-top: 0;
+  }
+  .education-page .education-section-heading {
+    margin-bottom: 20px;
+  }
+  @media (max-width: 700px) {
+    .education-page .education-hero-panel {
+      margin-top: 20px;
+      padding: 26px 20px 24px;
+    }
+    .education-page .education-hero-panel h2 {
+      font-size: 1.9rem;
+    }
+    .education-page .sh-gallery-wrap {
+      margin-top: 14px;
+    }
+    .education-page .education-photo-row {
+      display: block;
+    }
+    .education-page .education-photo-row img {
+      width: 100%;
+      height: 190px;
+      margin-top: 10px;
+    }
+    .education-page .education-scholar-list {
+      display: block;
+    }
+    .education-page .education-secondary-row {
+      display: block;
+    }
+    .education-page .education-secondary-card + .education-secondary-card {
+      margin-top: 18px;
+    }
+    .education-page .education-scholar-card,
+    .education-page .education-secondary-row,
+    .education-page .education-experience-grid {
+      margin-top: 20px;
+    }
+  }
+</style>
+<section
+  class="sh-section sh-section-top-compact sh-page-top sh-page-match-research-top sh-page-intro education-page"
+>
+  <div class="sh-container">
+    <div class="sh-page-intro-header">
+      <p class="sh-eyebrow">Training and mentorship</p>
+      <h1 class="sh-heading-reset">Education</h1>
+      <p class="sh-page-intro-copy">
+        The BCC Student Research Scholars Program gives motivated undergraduate
+        students a structured path into translational pediatric oncology
+        research, combining hands-on laboratory work with mentorship, scientific
+        communication, and clinical exposure.
+      </p>
+    </div>
+    <div class="education-hero-panel">
+      <div class="education-hero-inner">
+        <h2>BCC Student Research Scholars Program</h2>
+        <p class="education-hero-copy">
+          Student Research Scholars contribute to active Sholler Lab and Beat
+          Childhood Cancer research projects while learning how discoveries move
+          from bench to bedside. The program is designed for students exploring
+          careers in medicine, biomedical research, biotechnology, or pediatric
+          oncology.
+        </p>
+      </div>
+    </div>
+    <div class="sh-gallery-wrap" aria-label="Student research photos">
+      <div class="sh-gallery sh-gallery-manual">
+        <img
+          src="https://sites.psu.edu/shollerlab/files/2026/05/interns.jpg"
+          alt=""
+          class="is-active"
+          loading="lazy"
+        />
+        <img
+          src="https://sites.psu.edu/shollerlab/files/2026/05/interns2.jpg"
+          alt=""
+          loading="lazy"
+        />
+        <img
+          src="https://sites.psu.edu/shollerlab/files/2026/05/interns3.jpg"
+          alt=""
+          loading="lazy"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+<section class="sh-section education-page">
+  <div class="sh-container">
+    <p class="sh-eyebrow">Undergraduate training</p>
+    <h2 class="education-section-heading">
+      BCC Student Research Scholars Program
+    </h2>
+    <div class="education-card education-scholar-card education-item1">
+      <div class="education-card-header">
+        <div class="education-stage-number education-stage-blue">1</div>
+        <div class="education-card-title">
+          <h3>Undergraduate Research Scholars</h3>
+        </div>
+      </div>
+      <p class="education-card-intro">
+        Our laboratory also offers the BCC Student Research Scholars Program for
+        motivated undergraduate students interested in gaining hands-on
+        experience in translational pediatric oncology research. BCC Student
+        Research Scholars work closely with scientists and trainees in the lab,
+        contributing to active research projects while learning techniques in
+        experimental design, data analysis, and scientific communication.
+        Scholars also shadow in clinic alongside physicians, including Dr.
+        Sholler, gaining firsthand exposure to how novel therapies and active
+        clinical trials move research from bench to bedside.
+      </p>
+      <ul class="education-list education-scholar-list">
+        <li>
+          <i class="fa-solid fa-flask" aria-hidden="true"></i>
+          <div>
+            <strong>Laboratory Research Skills</strong
+            ><span
+              >Hands-on training in molecular biology, cell culture, genomics,
+              and bioinformatics.</span
+            >
+          </div>
+        </li>
+        <li>
+          <i class="fa-solid fa-display" aria-hidden="true"></i>
+          <div>
+            <strong>Research Presentation</strong
+            ><span
+              >Build communication skills through lab and poster
+              presentations.</span
+            >
+          </div>
+        </li>
+        <li>
+          <i class="fa-solid fa-file-lines" aria-hidden="true"></i>
+          <div>
+            <strong>Scientific Writing & Publication</strong
+            ><span
+              >Learn to write lab reports, manuscripts, and abstracts.</span
+            >
+          </div>
+        </li>
+        <li>
+          <i class="fa-solid fa-stethoscope" aria-hidden="true"></i>
+          <div>
+            <strong>Clinical Exposure</strong
+            ><span
+              >Observe clinical care and multidisciplinary team rounds.</span
+            >
+          </div>
+        </li>
+        <li>
+          <i class="fa-solid fa-chalkboard-user" aria-hidden="true"></i>
+          <div>
+            <strong>Lecture Series</strong
+            ><span
+              >Attend seminars and lectures on cancer biology, translational
+              research, and precision medicine.</span
+            >
+          </div>
+        </li>
+        <li>
+          <i class="fa-solid fa-users" aria-hidden="true"></i>
+          <div>
+            <strong>Mentorship & Career Exploration</strong
+            ><span
+              >Connect with mentors and explore careers in medicine and
+              research.</span
+            >
+          </div>
+        </li>
+      </ul>
+      <div class="education-note">
+        <p>
+          This program is ideal for students considering future careers in
+          medicine, biomedical research, or biotechnology and who want to
+          experience how discoveries in the lab can move toward clinical trials
+          that help children with cancer.
+        </p>
+      </div>
+    </div>
+    <div
+      class="education-mission-band"
+      role="region"
+      aria-label="Education mission"
+    >
+      <p>
+        Our mission is to train the next generation of leaders and scientists
+        who will transform care and cures for children and adolescents with
+        cancer through education, mentorship, and discovery.
+      </p>
+    </div>
+  </div>
+</section>
+<section class="sh-section sh-section-tight sh-bg-soft education-page">
+  <div class="sh-container">
+    <p class="sh-eyebrow">Additional pathways</p>
+    <h2>Broader Pediatric Oncology Training</h2>
+    <p class="sh-lead">
+      The lab also supports learners across later stages of medical and research
+      training. These pathways build on the same values of mentorship,
+      collaboration, and translational discovery.
+    </p>
+    <div class="education-secondary-row">
+      <div class="education-card education-secondary-card education-purple">
+        <div class="education-card-header">
+          <div class="education-stage-number education-stage-purple">2</div>
+          <div class="education-card-title">
+            <h3>Medical Student Training</h3>
+          </div>
+        </div>
+        <ul class="education-list">
+          <li>
+            <i class="fa-solid fa-book-open" aria-hidden="true"></i>
+            <div>
+              <strong>Early Exposure</strong
+              ><span>Introductory experiences in pediatric oncology.</span>
+            </div>
+          </li>
+          <li>
+            <i class="fa-solid fa-user-graduate" aria-hidden="true"></i>
+            <div>
+              <strong>Mentorship</strong
+              ><span>Connect with faculty mentors and role models.</span>
+            </div>
+          </li>
+          <li>
+            <i class="fa-solid fa-microscope" aria-hidden="true"></i>
+            <div>
+              <strong>Research Opportunities</strong
+              ><span>Engage in research and scholarly projects.</span>
+            </div>
+          </li>
+          <li>
+            <i class="fa-solid fa-stethoscope" aria-hidden="true"></i>
+            <div>
+              <strong>Clinical Experience</strong
+              ><span
+                >Elective and rotation experiences in pediatric oncology.</span
+              >
+            </div>
+          </li>
+          <li>
+            <i class="fa-solid fa-people-group" aria-hidden="true"></i>
+            <div>
+              <strong>Career Development</strong
+              ><span>Guidance for careers in academic medicine.</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="education-card education-secondary-card education-teal">
+        <div class="education-card-header">
+          <div class="education-stage-number education-stage-teal">3</div>
+          <div class="education-card-title">
+            <h3>Resident Training</h3>
+          </div>
+        </div>
+        <ul class="education-list">
+          <li>
+            <i class="fa-solid fa-hospital" aria-hidden="true"></i>
+            <div>
+              <strong>Clinical Excellence</strong
+              ><span>Build strong foundations in oncology clinical care.</span>
+            </div>
+          </li>
+          <li>
+            <i class="fa-solid fa-user-doctor" aria-hidden="true"></i>
+            <div>
+              <strong>Dedicated Rotations</strong
+              ><span
+                >Pediatric oncology rotations and subspecialty exposure.</span
+              >
+            </div>
+          </li>
+          <li>
+            <i class="fa-solid fa-book" aria-hidden="true"></i>
+            <div>
+              <strong>Didactics & Conferences</strong
+              ><span>Case-based learning and multidisciplinary education.</span>
+            </div>
+          </li>
+          <li>
+            <i class="fa-solid fa-person-chalkboard" aria-hidden="true"></i>
+            <div>
+              <strong>Scholarly Activity</strong
+              ><span>Support for research and quality projects.</span>
+            </div>
+          </li>
+          <li>
+            <i class="fa-solid fa-compass" aria-hidden="true"></i>
+            <div>
+              <strong>Career Exploration</strong
+              ><span>Explore pathways in oncology care and research.</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="education-card education-secondary-card education-red">
+        <div class="education-card-header">
+          <div class="education-stage-number education-stage-red">4</div>
+          <div class="education-card-title">
+            <h3>Clinical Fellow Training</h3>
+          </div>
+        </div>
+        <ul class="education-list">
+          <li>
+            <i class="fa-solid fa-user" aria-hidden="true"></i>
+            <div>
+              <strong>Program Director</strong
+              ><span>Overall leadership and strategic oversight.</span>
+            </div>
+          </li>
+          <li>
+            <i class="fa-solid fa-users-gear" aria-hidden="true"></i>
+            <div>
+              <strong>Associate Director</strong
+              ><span>Program development and operational leadership.</span>
+            </div>
+          </li>
+          <li>
+            <i class="fa-solid fa-clipboard-list" aria-hidden="true"></i>
+            <div>
+              <strong>Program Coordinator</strong
+              ><span>Fellow support, scheduling, and oversight.</span>
+            </div>
+          </li>
+          <li>
+            <i class="fa-solid fa-briefcase-medical" aria-hidden="true"></i>
+            <div>
+              <strong>Clinical Training</strong
+              ><span>Advanced education and procedural training.</span>
+            </div>
+          </li>
+          <li>
+            <i class="fa-solid fa-handshake" aria-hidden="true"></i>
+            <div>
+              <strong>Professional Development</strong
+              ><span>Leadership, ethics, and career preparation.</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="education-card education-secondary-card education-orange">
+        <div class="education-card-header">
+          <div class="education-stage-number education-stage-orange">5</div>
+          <div class="education-card-title">
+            <h3>Graduate &amp; Postdoctoral Training</h3>
+          </div>
+        </div>
+        <ul class="education-list">
+          <li>
+            <i class="fa-solid fa-dna" aria-hidden="true"></i>
+            <div>
+              <strong>PhD Training</strong
+              ><span>Training in basic and translational cancer research.</span>
+            </div>
+          </li>
+          <li>
+            <i class="fa-solid fa-chart-simple" aria-hidden="true"></i>
+            <div>
+              <strong>Research Mentorship</strong
+              ><span>Individualized mentorship and career guidance.</span>
+            </div>
+          </li>
+          <li>
+            <i class="fa-solid fa-microscope" aria-hidden="true"></i>
+            <div>
+              <strong>Core Resources</strong
+              ><span>Access to advanced technologies and resources.</span>
+            </div>
+          </li>
+          <li>
+            <i class="fa-solid fa-people-arrows" aria-hidden="true"></i>
+            <div>
+              <strong>Collaborative Environment</strong
+              ><span>Collaboration across labs and clinical teams.</span>
+            </div>
+          </li>
+          <li>
+            <i class="fa-solid fa-award" aria-hidden="true"></i>
+            <div>
+              <strong>Postdoctoral Development</strong
+              ><span>Build research independence and leadership.</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="sh-section sh-section-tight education-page">
+  <div class="sh-container">
+    <p class="sh-eyebrow">Trainee experience</p>
+    <h2>How Learners Grow in the Program</h2>
+    <div class="sh-grid sh-grid-3 sh-mt-18 education-experience-grid">
+      <div class="sh-card education-experience-card">
+        <h3>Bench-to-Bedside Perspective</h3>
+        <p>
+          Learners see how patient needs shape laboratory questions and how
+          preclinical discoveries can support future clinical trials.
+        </p>
+      </div>
+      <div class="sh-card education-experience-card">
+        <h3>Scientific Communication</h3>
+        <p>
+          Trainees practice presenting data, writing abstracts and manuscripts,
+          and discussing research clearly with multidisciplinary teams.
+        </p>
+      </div>
+      <div class="sh-card education-experience-card">
+        <h3>Mentored Career Development</h3>
+        <p>
+          The program connects trainees with faculty, clinicians, researchers,
+          and collaborators who can help them define their next step.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+  (function () {
+    var gallery = document.querySelector(".education-page .sh-gallery-manual");
+    if (!gallery) return;
+
+    var images = gallery.querySelectorAll("img");
+    if (images.length < 2) return;
+
+    if (
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      return;
+    }
+
+    var activeIndex = 0;
+
+    function setActive(nextIndex) {
+      images[activeIndex].classList.remove("is-active");
+      activeIndex = nextIndex;
+      images[activeIndex].classList.add("is-active");
+    }
+
+    window.setInterval(function () {
+      setActive((activeIndex + 1) % images.length);
+    }, 6000);
+  })();
+</script>

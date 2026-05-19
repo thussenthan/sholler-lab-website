@@ -4,7 +4,7 @@ HTML and CSS code for the Sholler Lab website (<https://sites.psu.edu/shollerlab
 
 ## Structure
 
-- **HTML pages**: Modular, CMS-friendly fragments (`header.html`, `home.html`, `research.html`, `people.html`, `publications.html`, `inspiration.html`, `contact.html`, `footer.html`)
+- **HTML pages**: Modular, CMS-friendly fragments (`header.html`, `home.html`, `research.html`, `people.html`, `education.html`, `publications.html`, `inspiration.html`, `contact.html`, `footer.html`)
 - **Styling**: Centralized `global-css.css` with page-level overrides
 
 ## Reusable intake templates
