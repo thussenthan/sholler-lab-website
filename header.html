@@ -5,6 +5,8 @@
     --sh-nav-height-compact: 37px;
     --sh-control-size: 30px;
     --sh-control-size-compact: 28px;
+    --sh-brand-mark-size: clamp(56px, 5vw, 68px);
+    --sh-brand-mark-size-compact: clamp(46px, 4vw, 56px);
     --sh-header-navy: var(--nittany-navy, #001e44);
     --sh-header-blue: var(--beaver-blue, #1e407c);
     --sh-header-hover-blue: #2a588f;
@@ -180,6 +182,7 @@
   .sh-brand {
     display: flex;
     align-items: center;
+    gap: 16px;
     justify-self: start;
     min-width: 0;
     text-decoration: none;
@@ -226,6 +229,29 @@
     transition:
       font-size 0.22s ease,
       opacity 0.22s ease;
+  }
+
+  .sh-brand-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--sh-brand-mark-size);
+    height: var(--sh-brand-mark-size);
+    flex: 0 0 var(--sh-brand-mark-size);
+    border-radius: 10px;
+    background: #ffffff;
+    border: 1px solid rgba(150, 190, 230, 0.58);
+    padding: 0;
+    overflow: hidden;
+    backdrop-filter: blur(4px);
+    transition: padding 0.22s ease;
+  }
+
+  .sh-brand-mark img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
 
   .sh-brand-logos {
@@ -411,6 +437,12 @@
   .sh-site-header.is-scrolled .sh-brand-subtitle {
     font-size: clamp(0.84rem, 0.98vw, 0.96rem);
     opacity: 0.88;
+  }
+
+  .sh-site-header.is-scrolled .sh-brand-mark {
+    width: var(--sh-brand-mark-size-compact);
+    height: var(--sh-brand-mark-size-compact);
+    flex-basis: var(--sh-brand-mark-size-compact);
   }
 
   .sh-site-header.is-scrolled .sh-brand-logos {
@@ -786,6 +818,8 @@
       --sh-nav-height-compact: 40px;
       --sh-control-size: 30px;
       --sh-control-size-compact: 30px;
+      --sh-brand-mark-size: clamp(50px, 16vw, 58px);
+      --sh-brand-mark-size-compact: clamp(50px, 16vw, 58px);
     }
 
     .sh-header-top .sh-header-inner {
@@ -867,6 +901,15 @@
   <div class="sh-header-top">
     <div class="sh-header-inner">
       <a class="sh-brand" href="home" aria-label="Go to Sholler Lab home page">
+        <span class="sh-brand-mark" aria-hidden="true">
+          <img
+            src="https://sites.psu.edu/shollerlab/files/2026/05/peachlogocleanedMOCKUP-e1779829814147.png"
+            alt=""
+            width="56"
+            height="56"
+            loading="eager"
+          />
+        </span>
         <div class="sh-brand-text">
           <div class="sh-brand-title">Sholler Lab</div>
           <p class="sh-brand-subtitle">Pediatric Oncology</p>
