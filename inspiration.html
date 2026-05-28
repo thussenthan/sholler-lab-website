@@ -386,7 +386,152 @@
     margin-bottom: 0;
   }
 
+  .sh-logo-story {
+    margin: 30px auto 42px;
+    display: grid;
+    grid-template-columns: minmax(240px, 1fr) minmax(0, 2fr);
+    gap: 28px;
+    align-items: center;
+    padding: 26px 26px 26px 30px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #fff7f3 0%, #f5faff 100%);
+    border: 1px solid #d9e4ee;
+    border-left: 8px solid #f29b77;
+    box-shadow: 0 12px 34px rgba(0, 30, 68, 0.08);
+  }
+
+  .sh-logo-story__mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sh-logo-story__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 16px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid rgba(0, 30, 68, 0.08);
+    cursor: zoom-in;
+    transition:
+      transform 0.22s ease,
+      box-shadow 0.22s ease,
+      background-color 0.22s ease;
+  }
+
+  .sh-logo-story__button:hover,
+  .sh-logo-story__button:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(0, 30, 68, 0.14);
+    background: rgba(255, 255, 255, 0.95);
+  }
+
+  .sh-logo-story__button:focus-visible {
+    outline: 2px solid #0c2f63;
+    outline-offset: 4px;
+  }
+
+  .sh-logo-story__mark img {
+    display: block;
+    width: min(100%, 280px);
+    height: auto;
+  }
+
+  .sh-logo-lightbox {
+    position: fixed;
+    top: var(--sh-fixed-header-offset, 0px);
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(0, 18, 42, 0.78);
+    backdrop-filter: blur(6px);
+  }
+
+  .sh-logo-lightbox.is-open {
+    display: flex;
+  }
+
+  .sh-logo-lightbox__dialog {
+    position: relative;
+    width: min(980px, 100%);
+    max-height: min(86vh, 900px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 26px 60px rgba(0, 0, 0, 0.26);
+  }
+
+  .sh-logo-lightbox__image {
+    display: block;
+    width: min(100%, 760px);
+    max-width: 100%;
+    max-height: calc(86vh - 80px);
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 16px 28px rgba(0, 30, 68, 0.12));
+  }
+
+  .sh-logo-lightbox__close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 999px;
+    background: #f4f7fb;
+    color: #001e44;
+    font-size: 1.8rem;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 10px 24px rgba(0, 30, 68, 0.12);
+  }
+
+  .sh-logo-story__content h2 {
+    margin: 0 0 10px;
+  }
+
+  .sh-logo-story__content p {
+    margin: 0 0 12px;
+    line-height: 1.72;
+  }
+
+  .sh-logo-story__content p:last-child {
+    margin-bottom: 0;
+  }
+
   @media (max-width: 900px) {
+    .sh-logo-story {
+      grid-template-columns: 1fr;
+      gap: 18px;
+      padding: 20px 20px 20px 24px;
+    }
+
+    .sh-logo-lightbox {
+      padding: 16px;
+    }
+
+    .sh-logo-lightbox__dialog {
+      padding: 28px 20px 20px;
+      border-radius: 20px;
+    }
+
+    .sh-logo-lightbox__close {
+      top: 10px;
+      right: 10px;
+    }
+
     .sh-artpiece-feature-shell {
       padding: 14px;
       width: min(948px, 100%);
@@ -784,6 +929,78 @@
         © Joel Schoon-Tanis, <em>Reach for the Stars</em>, 2021.
       </p>
 
+      <div class="sh-logo-story sh-reveal-on-scroll">
+        <div class="sh-logo-story__mark">
+          <button
+            type="button"
+            class="sh-logo-story__button"
+            data-logo-open="true"
+            aria-label="Open Sholler Lab logo full screen"
+          >
+            <img
+              src="https://sites.psu.edu/shollerlab/files/2026/05/peachlogocleanedMOCKUP-e1779829814147.png"
+              alt="Sholler Lab logo"
+              loading="lazy"
+            />
+          </button>
+        </div>
+        <div class="sh-logo-story__content">
+          <p class="sh-eyebrow">Our lab identity</p>
+          <h2>The meaning behind our logo</h2>
+          <p>
+            Our logo reflects the heart of the Sholler Lab: a child-centered
+            mission grounded in precision medicine, discovery, and hope. Its
+            organic form suggests growth and possibility, while the bright
+            central mark speaks to the individual child whose tumor biology we
+            work to understand with clarity and care.
+          </p>
+          <p>
+            That same idea drives our science. We study the genomic and
+            biological drivers of pediatric solid and brain tumors so we can
+            identify the pathways that matter most, interrupt them with targeted
+            drugs and immunotherapies, and move those insights toward real
+            treatments through translational research and clinical trials.
+          </p>
+          <p>
+            In that sense, the logo is more than a visual mark. It represents
+            our belief that every child deserves a treatment strategy shaped to
+            their specific disease, and that laboratory discovery should always
+            stay connected to the families and futures we are trying to protect.
+            Our mission is to cure childhood cancer by harnessing precision
+            medicine to better understand and target each child&rsquo;s unique
+            tumor, and this mark keeps that goal visible in the lab every day.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="sh-logo-lightbox"
+        data-logo-lightbox="true"
+        aria-hidden="true"
+      >
+        <div
+          class="sh-logo-lightbox__dialog"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Sholler Lab logo enlarged view"
+        >
+          <button
+            type="button"
+            class="sh-logo-lightbox__close"
+            data-logo-close="true"
+            aria-label="Close full screen logo"
+          >
+            &times;
+          </button>
+          <img
+            class="sh-logo-lightbox__image"
+            src="https://sites.psu.edu/shollerlab/files/2026/05/peachlogocleanedMOCKUP-e1779829814147.png"
+            alt="Sholler Lab logo enlarged"
+            loading="lazy"
+          />
+        </div>
+      </div>
+
       <div class="sh-artpiece-feature-shell sh-reveal-on-scroll">
         <div class="sh-artpiece-feature">
           <div class="sh-artpiece-video">
@@ -936,6 +1153,9 @@
     const videoButtons = document.querySelectorAll("[data-video-play='true']");
     const artpieceVideo = document.querySelector(".sh-artpiece-video");
     const globeFeature = document.querySelector(".sh-feature-box--globe");
+    const logoOpenButton = document.querySelector("[data-logo-open='true']");
+    const logoLightbox = document.querySelector("[data-logo-lightbox='true']");
+    const logoCloseButton = document.querySelector("[data-logo-close='true']");
     let youtubeApiPromise = null;
     const shouldWarmYouTubeApi =
       window.matchMedia("(pointer: coarse)").matches ||
@@ -1031,6 +1251,48 @@
         "*",
       );
     };
+
+    const closeLogoLightbox = () => {
+      if (!logoLightbox) return;
+      logoLightbox.classList.remove("is-open");
+      logoLightbox.setAttribute("aria-hidden", "true");
+      document.body.style.removeProperty("overflow");
+      if (logoOpenButton) {
+        logoOpenButton.focus();
+      }
+    };
+
+    const openLogoLightbox = () => {
+      if (!logoLightbox) return;
+      logoLightbox.classList.add("is-open");
+      logoLightbox.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      if (logoCloseButton) {
+        logoCloseButton.focus();
+      }
+    };
+
+    if (logoOpenButton && logoLightbox) {
+      logoOpenButton.addEventListener("click", openLogoLightbox);
+
+      logoLightbox.addEventListener("click", (event) => {
+        if (
+          event.target === logoLightbox ||
+          event.target.closest("[data-logo-close='true']")
+        ) {
+          closeLogoLightbox();
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (
+          event.key === "Escape" &&
+          logoLightbox.classList.contains("is-open")
+        ) {
+          closeLogoLightbox();
+        }
+      });
+    }
 
     const playDesktopVideoFast = (iframe) => {
       sendYouTubeCommand(iframe, "unMute");
